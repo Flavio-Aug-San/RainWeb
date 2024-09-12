@@ -54,6 +54,9 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
+    # Mapa interativo usando Leafmap
+    m = leafmap.Map(height=700, center=[-18.5122, -44.5550], zoom=6,layout="wide" ,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    
     # Sidebar para seleção de estação e datas
     st.sidebar.header("Filtros de Seleção")
     
@@ -86,10 +89,7 @@ def main():
             st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
-
-    # Mapa interativo usando Leafmap
-    m = leafmap.Map(height=700, center=[-18.5122, -44.5550], zoom=6,layout="wide" ,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
-
+            
     for i, row in gdf_mg.iterrows():
         m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
     m.to_streamlit()
