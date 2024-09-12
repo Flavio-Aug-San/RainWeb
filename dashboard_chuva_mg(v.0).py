@@ -91,7 +91,7 @@ def main():
 
     # Mapa interativo usando Leafmap
     st.subheader("Mapa de Estações Pluviométricas em Minas Gerais")
-    m = leafmap.Map(height="450px", width="600px",center=[-18.5122, -44.5550], zoom=6)
+    m = leafmap.Map(center=[-18.5122, -44.5550], zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True,)
 
     for i, row in gdf_mg.iterrows():
         m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
