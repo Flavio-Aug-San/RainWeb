@@ -122,9 +122,9 @@ def main():
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
             
-    for i, row in gdf_mg.iterrows():
-        m.add_marker(location=[row['Latitude'], row['Longitude']],popup=f"{row['Nome']} (Código: {row['Código']})")
-    m.to_streamlit()
+        for i, row in gdf_mg.iterrows():
+            m.add_marker(location=[row['Latitude'], row['Longitude']],popup=f"{row['Nome']} (Código: {row['Código']})")
+        m.to_streamlit()
 
 if __name__ == "__main__":
     main()
