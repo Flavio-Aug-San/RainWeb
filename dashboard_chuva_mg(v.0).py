@@ -116,7 +116,7 @@ def main():
             # Baixar os dados da estação
             dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
         
-        if not dados_estacao.empty:
+        if dados_estacao.empty:
             st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
             st.write(dados_estacao)
         else:
