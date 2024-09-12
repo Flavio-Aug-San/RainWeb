@@ -77,38 +77,50 @@ def main():
     # Mapa interativo usando Leafmap
     m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
     
-    # Sidebar para seleção de estação e datas
-    st.sidebar.header("Filtros de Seleção")
-    
-    # Opções de seleção: Nome ou Código
-    modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome', 'Código'))
-    
-    if modo_selecao == 'Nome':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
-        codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
-    else:
-        codigo_estacao = st.sidebar.selectbox("Selecione o Código da Estação", gdf_mg['Código'].unique())
-        estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
-    
-    sigla_estado = 'MG'
+   # Sidebar para seleção de estação e datas
+st.sidebar.header("Filtros de Seleção")
 
-    # Seleção de datas
+# Opções de seleção: Nome ou Código
+modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome', 'Código'))
+
+if modo_selecao == 'Nome':
+    estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
+    codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
+else:
+    codigo_estacao = st.sidebar.selectbox("Selecione o Código da Estação", gdf_mg['Código'].unique())
+    estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
+
+sigla_estado = 'MG'
+
+# Escolha entre busca diária ou mensal
+tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+
+if tipo_busca == 'Diária':
+    # Seleção de datas para busca diária
     data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
     data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
+else:
+    # Seleção de mês para busca mensal
+    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
+    mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
+    
+    # Definindo a data inicial e final com base no mês e ano selecionados
+    data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
+    data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
 
-    if st.sidebar.button("Baixar Dados"):
-        # Converter datas para o formato necessário
-        data_inicial_str = data_inicial.strftime('%Y%m%d')
-        data_final_str = data_final.strftime('%Y%m%d')
+if st.sidebar.button("Baixar Dados"):
+    # Converter datas para o formato necessário
+    data_inicial_str = data_inicial.strftime('%Y%m%d')
+    data_final_str = data_final.strftime('%Y%m%d')
 
-        # Baixar os dados da estação
-        dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
-        
-        if not dados_estacao.empty:
-            st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-            st.write(dados_estacao)
-        else:
-            st.warning("Nenhum dado encontrado para o período selecionado.")
+    # Baixar os dados da estação
+    dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+    
+    if not dados_estacao.empty:
+        st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+        st.write(dados_estacao)
+    else:
+        st.warning("Nenhum dado encontrado para o período selecionado.")
             
     for i, row in gdf_mg.iterrows():
         m.add_marker(location=[row['Latitude'], row['Longitude']],popup=f"{row['Nome']} (Código: {row['Código']})")
