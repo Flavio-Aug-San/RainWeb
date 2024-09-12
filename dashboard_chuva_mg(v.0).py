@@ -93,7 +93,7 @@ def main():
         sigla_estado = 'MG'
         
         # Escolha entre busca diária ou mensal
-        st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+        tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
         
         if tipo_busca == 'Diária':
             # Seleção de datas para busca diária
