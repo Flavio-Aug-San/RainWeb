@@ -54,8 +54,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
-    st.title("Dashboard de Chuva - Minas Gerais")
-
     # Sidebar para seleção de estação e datas
     st.sidebar.header("Filtros de Seleção")
     
@@ -90,7 +88,6 @@ def main():
             st.warning("Nenhum dado encontrado para o período selecionado.")
 
     # Mapa interativo usando Leafmap
-    st.subheader("Mapa de Estações Pluviométricas em Minas Gerais")
     m = leafmap.Map(center=[-18.5122, -44.5550], zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True, toolbar_control=False)
 
     for i, row in gdf_mg.iterrows():
