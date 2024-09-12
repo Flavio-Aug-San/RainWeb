@@ -112,7 +112,7 @@ def main():
             
     for i, row in gdf_mg.iterrows():
         m.add_circle_markers_from_xy(row, x=row['longitude'], y=row['Latitude'], radius=10, color="blue", fill_color="black")
-        m.add_marker(location=[row['Latitude'], row['Longitude']], ,popup=f"{row['Nome']} (Código: {row['Código']})")
+        m.add_marker(location=[row['Latitude'], row['Longitude']],popup=f"{row['Nome']} (Código: {row['Código']})")
     m.to_streamlit()
 
 if __name__ == "__main__":
