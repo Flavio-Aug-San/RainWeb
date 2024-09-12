@@ -84,11 +84,11 @@ def main():
         modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome', 'Código'))
         
         if modo_selecao == 'Nome':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
-        codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
+            estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
+            codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
         else:
-        codigo_estacao = st.sidebar.selectbox("Selecione o Código da Estação", gdf_mg['Código'].unique())
-        estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
+            codigo_estacao = st.sidebar.selectbox("Selecione o Código da Estação", gdf_mg['Código'].unique())
+            estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
         
         sigla_estado = 'MG'
         
