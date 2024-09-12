@@ -112,13 +112,12 @@ def main():
             # Converter datas para o formato necessário
             data_inicial_str = data_inicial.strftime('%Y%m%d')
             data_final_str = data_final.strftime('%Y%m%d')
-            
             # Baixar os dados da estação
             dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
         
-        if not dados_estacao.empty:
-            st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-            st.write(dados_estacao)
+            if not dados_estacao.empty:
+                st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+                st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
             
