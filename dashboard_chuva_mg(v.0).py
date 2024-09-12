@@ -52,8 +52,8 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     else:
         return pd.DataFrame()
 
-        # Função principal do dashboard
-    def main():
+# Função principal do dashboard
+def main():
         # Defina o layout da página como largo
         st.set_page_config(layout="wide")
         
@@ -93,7 +93,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         sigla_estado = 'MG'
         
         # Escolha entre busca diária ou mensal
-        tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+        st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
         
         if tipo_busca == 'Diária':
         # Seleção de datas para busca diária
