@@ -96,25 +96,25 @@ def main():
         st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
         
         if tipo_busca == 'Diária':
-        # Seleção de datas para busca diária
-        data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
-        data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
+            # Seleção de datas para busca diária
+            data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
+            data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
         else:
-        # Seleção de mês para busca mensal
-        ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
-        mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
-        
-        # Definindo a data inicial e final com base no mês e ano selecionados
-        data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
-        data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
+            # Seleção de mês para busca mensal
+            ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
+            mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
+            
+            # Definindo a data inicial e final com base no mês e ano selecionados
+            data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
+            data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
         
         if st.sidebar.button("Baixar Dados"):
-        # Converter datas para o formato necessário
-        data_inicial_str = data_inicial.strftime('%Y%m%d')
-        data_final_str = data_final.strftime('%Y%m%d')
-        
-        # Baixar os dados da estação
-        dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+            # Converter datas para o formato necessário
+            data_inicial_str = data_inicial.strftime('%Y%m%d')
+            data_final_str = data_final.strftime('%Y%m%d')
+            
+            # Baixar os dados da estação
+            dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
         
         if not dados_estacao.empty:
             st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
