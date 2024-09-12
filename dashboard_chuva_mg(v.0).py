@@ -92,17 +92,17 @@ def main():
             estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
 
         # Recupera as coordenadas da estação selecionada
-    latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
-    longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
-    
-    # Mapa Folium centralizado na estação selecionada
-    m = folium.Map(location=[latitude_estacao, longitude_estacao], zoom_start=12)
-    
-    # Adiciona um marcador para a estação selecionada
-    folium.Marker([latitude_estacao, longitude_estacao], popup=f"{estacao_selecionada}").add_to(m)
-    
-    # Mostra o mapa no Streamlit
-    folium_static(m)
+        latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
+        longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
+        
+        # Mapa Folium centralizado na estação selecionada
+        m = folium.Map(location=[latitude_estacao, longitude_estacao], zoom_start=12)
+        
+        # Adiciona um marcador para a estação selecionada
+        folium.Marker([latitude_estacao, longitude_estacao], popup=f"{estacao_selecionada}").add_to(m)
+        
+        # Mostra o mapa no Streamlit
+        folium_static(m)
     
         sigla_estado = 'MG'
         
