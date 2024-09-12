@@ -88,8 +88,7 @@ def main():
             st.warning("Nenhum dado encontrado para o período selecionado.")
 
     # Mapa interativo usando Leafmap
-    st.set_page_config(layout="wide")
-    m = leafmap.Map(height=700, center=[-18.5122, -44.5550], zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(height=700, center=[-18.5122, -44.5550], zoom=6,layout="wide" ,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
     for i, row in gdf_mg.iterrows():
         m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
