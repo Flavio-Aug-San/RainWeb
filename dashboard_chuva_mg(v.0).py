@@ -56,6 +56,9 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 def main():
     # Defina o layout da página como largo
     st.set_page_config(layout="wide")
+
+    # Exibir o mapa em tela cheia
+    m.to_streamlit(height=700)
     
     # Mapa interativo usando Leafmap
     m = leafmap.Map(center=[-18.5122, -44.5550], zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
