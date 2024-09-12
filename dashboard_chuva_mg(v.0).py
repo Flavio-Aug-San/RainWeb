@@ -94,7 +94,7 @@ def main():
     m = leafmap.Map(center=[-18.5122, -44.5550], zoom=6)
 
     for i, row in gdf_mg.iterrows():
-        m.add_marker(shape="circle",radius=20,color="red",fill_color="#3388ff",fill_opacity=0.5,location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
+        m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
     m.to_streamlit()
 
 if __name__ == "__main__":
