@@ -4,6 +4,7 @@ import geopandas as gpd
 import requests
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
+import folium
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
@@ -91,7 +92,7 @@ def main():
 
     # Mapa interativo usando Leafmap
     st.subheader("Mapa de Estações Pluviométricas em Minas Gerais")
-    m = leafmap.Map(height=450, width=600,center=[-18.5122, -44.5550], zoom=6)
+    m = folium.Map(height=450, width=600,center=[-18.5122, -44.5550], zoom=6)
 
     for i, row in gdf_mg.iterrows():
         m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
