@@ -63,8 +63,8 @@ def main():
     """
     <style>
         .main .block-container {
-            padding: 10;
-            margin: 10;
+            padding: 1;
+            margin: 1;
         }
         iframe {
             height: 100vh !important;
