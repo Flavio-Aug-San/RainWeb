@@ -1,5 +1,6 @@
 setuptools
 streamlit
+folium
 pandas
 geopandas
 leafmap
