@@ -63,12 +63,12 @@ def main():
     """
     <style>
         .main .block-container {
-            padding: 0.1;
-            margin: 0.1;
+            padding: 0;
+            margin: 0;
         }
         iframe {
-            height: 100vh !important;
-            width: 100vw !important;
+            height: 50vh !important;
+            width: 50vw !important;
         }
     </style>
     """,
