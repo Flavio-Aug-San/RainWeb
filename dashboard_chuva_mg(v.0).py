@@ -82,7 +82,7 @@ def main():
         st.sidebar.header("Filtros de Seleção")
         
         # Opções de seleção: Nome ou Código
-        modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome', 'Código'))
+        modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome'))
         
         if modo_selecao == 'Nome':
             estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
