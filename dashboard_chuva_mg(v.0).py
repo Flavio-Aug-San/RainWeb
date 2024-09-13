@@ -87,9 +87,6 @@ def main():
         if modo_selecao == 'Nome':
             estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
             codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
-        else:
-            codigo_estacao = st.sidebar.selectbox("Selecione o Código da Estação", gdf_mg['Código'].unique())
-            estacao_selecionada = gdf_mg[gdf_mg['Código'] == codigo_estacao]['Nome'].values[0]
 
         # Recupera as coordenadas da estação selecionada
         latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
