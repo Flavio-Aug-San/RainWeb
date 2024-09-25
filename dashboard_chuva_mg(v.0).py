@@ -78,7 +78,7 @@ def main():
         m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
         
         # Adiciona o shapefile de Minas Gerais ao mapa com bordas destacadas
-        m.add_gdf(mg_gdf, layer_name="Minas Gerais", style={"color": "blue", "weight": 2, "fillOpacity": 0.1})
+        m.add_gdf(mg_gdf, layer_name="Minas Gerais", style={"color": "black", "weight": 2})
         
         # Continua adicionando as estações meteorológicas
         for i, row in gdf_mg.iterrows():
@@ -87,7 +87,6 @@ def main():
         # Exibe o mapa no Streamlit
         m.to_streamlit()
 
-        
         # Sidebar para seleção de estação e datas
         st.sidebar.header("Filtros de Seleção")
         
