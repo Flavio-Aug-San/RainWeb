@@ -77,13 +77,18 @@ def main():
         # Mapa interativo usando Leafmap
         m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
         
-        # Adiciona o shapefile de Minas Gerais ao mapa sem popups ou tooltips
-        m.add_gdf(mg_gdf, layer_name="Minas Gerais", style={"color": "black", "weight": 1, "fillOpacity": 0}, info_mode=None)
+        # Adiciona o shapefile de Minas Gerais ao mapa sem popups, tooltips ou alterações no cursor
+        m.add_gdf(
+            mg_gdf, 
+            layer_name="Minas Gerais", 
+            style={"color": "blue", "weight": 2, "fillOpacity": 0.1, "interactive": False},  # 'interactive': False evita interações
+            info_mode=None
+        )
 
         # Continua adicionando as estações meteorológicas
         for i, row in gdf_mg.iterrows():
             m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
-        
+
         # Exibe o mapa no Streamlit
         m.to_streamlit()
 
