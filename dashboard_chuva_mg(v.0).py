@@ -124,7 +124,7 @@ def main():
         data_inicial_str = data_inicial.strftime('%Y%m%d')
         data_final_str = data_final.strftime('%Y%m%d')
         # Baixar os dados da estação e obter a soma do último mês
-        dados_estacao, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+        dados_estacao, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
 
         if not dados_estacao.empty:
             st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
@@ -138,7 +138,7 @@ def main():
         codigo_estacao = row['Código']
         
         # Baixa os dados do último mês e obtém a soma
-        _, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+        soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
         
         # Adiciona o marcador com a soma do último mês
         m.add_marker(location=[row['Latitude'], row['Longitude']], 
