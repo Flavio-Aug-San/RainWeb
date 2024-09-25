@@ -23,7 +23,7 @@ gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Lati
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 
-# Função para baixar os dados da estação
+# Função para baixar os dados da estação e retornar a soma do último mês
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
     # Recuperação do token
     token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
@@ -41,105 +41,111 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
         params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
         r = requests.get(sws_url, params=params, headers={'token': token})
-        
+
         # Se há dados, adiciona ao DataFrame
         if r.text:
             df_mes = pd.read_csv(pd.compat.StringIO(r.text))
             dfs.append(df_mes)
 
+    # Verifica se há dados baixados
     if dfs:
-        return pd.concat(dfs, ignore_index=True)
+        dados_completos = pd.concat(dfs, ignore_index=True)
+
+        # Filtrar o último mês dos dados baixados
+        ultimo_mes = dados_completos['Data'].max()[:7]  # Assume que há uma coluna 'Data' no formato 'YYYY-MM-DD'
+        dados_ultimo_mes = dados_completos[dados_completos['Data'].str.startswith(ultimo_mes)]
+
+        # Calcula a soma dos valores do último mês (assumindo que a coluna de valores seja chamada 'Valor')
+        soma_ultimo_mes = dados_ultimo_mes['Valor'].sum()
+
+        return dados_completos, soma_ultimo_mes
     else:
-        return pd.DataFrame()
+        return pd.DataFrame(), 0
 
 # Função principal do dashboard
 def main():
-        # Defina o layout da página como largo
-        st.set_page_config(layout="wide")
-        
-        # CSS customizado para tornar o mapa tela cheia
-        st.markdown(
-            """
-            <style>
-                .main .block-container {
-                    padding: 0;
-                    margin: 0;
-                }
-                iframe {
-                    height: 100vh !important;
-                    width: 100vw !important;
-                }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-        
-        # Mapa interativo usando Leafmap
-        m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
-        
-        # Adiciona o shapefile de Minas Gerais ao mapa sem popups, tooltips ou alterações no cursor
-        m.add_gdf(
-            mg_gdf, 
-            layer_name="Minas Gerais", 
-            style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},  # 'interactive': False evita interações
-            info_mode=None
-        )
+    # Defina o layout da página como largo
+    st.set_page_config(layout="wide")
 
-        # Continua adicionando as estações meteorológicas
-        for i, row in gdf_mg.iterrows():
-            m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
+    # CSS customizado para tornar o mapa tela cheia
+    st.markdown(
+        """
+        <style>
+            .main .block-container {
+                padding: 0;
+                margin: 0;
+            }
+            iframe {
+                height: 100vh !important;
+                width: 100vw !important;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-        # Exibe o mapa no Streamlit
-        m.to_streamlit()
+    # Mapa interativo usando Leafmap
+    m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
-        # Sidebar para seleção de estação e datas
-        st.sidebar.header("Filtros de Seleção")
-        
-        # Opções de seleção: Nome ou Código
-        modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome'))
-        
-        if modo_selecao == 'Nome':
-            estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
-            codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
+    # Sidebar para seleção de estação e datas
+    st.sidebar.header("Filtros de Seleção")
 
-        # Recupera as coordenadas da estação selecionada
-        latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
-        longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
-    
-        sigla_estado = 'MG'
-        
-        # Escolha entre busca diária ou mensal
-        tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
-        
-        if tipo_busca == 'Diária':
-            # Seleção de datas para busca diária
-            data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
-            data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
-        else:
-            # Seleção de mês para busca mensal
-            ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
-            mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
-            
-            # Definindo a data inicial e final com base no mês e ano selecionados
-            data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
-            data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
-        
-        if st.sidebar.button("Baixar Dados"):
-            # Converter datas para o formato necessário
-            data_inicial_str = data_inicial.strftime('%Y%m%d')
-            data_final_str = data_final.strftime('%Y%m%d')
-            # Baixar os dados da estação
-            dados_estacao = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
-        
-            if not dados_estacao.empty:
-                st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-                st.write(dados_estacao)
+    # Opções de seleção: Nome ou Código
+    modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome'))
+
+    if modo_selecao == 'Nome':
+        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
+        codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
+
+    # Recupera as coordenadas da estação selecionada
+    latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
+    longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
+
+    sigla_estado = 'MG'
+
+    # Escolha entre busca diária ou mensal
+    tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+
+    if tipo_busca == 'Diária':
+        # Seleção de datas para busca diária
+        data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
+        data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
+    else:
+        # Seleção de mês para busca mensal
+        ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
+        mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
+
+        # Definindo a data inicial e final com base no mês e ano selecionados
+        data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
+        data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
+
+    if st.sidebar.button("Baixar Dados"):
+        # Converter datas para o formato necessário
+        data_inicial_str = data_inicial.strftime('%Y%m%d')
+        data_final_str = data_final.strftime('%Y%m%d')
+        # Baixar os dados da estação e obter a soma do último mês
+        dados_estacao, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+
+        if not dados_estacao.empty:
+            st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+            st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
-            
-        for i, row in gdf_mg.iterrows():
-            m.add_marker(location=[row['Latitude'], row['Longitude']],popup=f"{row['Nome']} (Código: {row['Código']})")
-        m.to_streamlit()
+
+    # Adiciona marcadores ao mapa com a soma do último mês no popup
+    for i, row in gdf_mg.iterrows():
+        estacao_nome = row['Nome']
+        codigo_estacao = row['Código']
+        
+        # Baixa os dados do último mês e obtém a soma
+        _, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
+        
+        # Adiciona o marcador com a soma do último mês
+        m.add_marker(location=[row['Latitude'], row['Longitude']], 
+                     popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês: {soma_ultimo_mes}")
+
+    # Exibe o mapa no Streamlit
+    m.to_streamlit()
 
 if __name__ == "__main__":
     main()
