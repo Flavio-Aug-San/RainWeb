@@ -10,8 +10,8 @@ shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geoj
 csv_file_path = 'input;/lista_das_estacoes_CEMADEN_13maio2024.csv'
 
 # Login e senha do CEMADEN (previamente fornecidos)
-login = 'augustoflaviobob@gmail.com'
-senha = 'Flaviobr123!'
+login: 'd2020028915@unifei.edu.br'
+senha: 'gLs24@ImgBR!'
 
 # Carregar os dados do shapefile de Minas Gerais
 mg_gdf = gpd.read_file(shp_mg_url)
@@ -64,6 +64,15 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
+    # Pega a data de hoje
+    hoje = datetime.now()
+    
+    # Definir a data inicial como o primeiro dia do mês atual
+    data_inicial = hoje.replace(day=1)
+    
+    # Definir a data final como a data de hoje
+    data_final = hoje
+    
     # Defina o layout da página como largo
     st.set_page_config(layout="wide")
 
