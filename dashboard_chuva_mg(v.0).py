@@ -90,12 +90,6 @@ def main():
         # Recupera as coordenadas da estação selecionada
         latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
         longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
-        
-        # Adiciona um marcador para a estação selecionada
-        folium.Marker([latitude_estacao, longitude_estacao], popup=f"{estacao_selecionada}").add_to(m)
-        
-        # Mostra o mapa no Streamlit
-        folium_static(m)
     
         sigla_estado = 'MG'
         
