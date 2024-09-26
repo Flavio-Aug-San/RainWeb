@@ -56,7 +56,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         dados_ultimo_mes = dados_completos[dados_completos['Data'].str.startswith(ultimo_mes)]
 
         # Calcula a soma dos valores do último mês (assumindo que a coluna de valores seja chamada 'Valor')
-        soma_ultimo_mes = dados_ultimo_mes['Valor'].sum()
+        soma_ultimo_mes = dados_ultimo_mes['valorMedida'].sum()
 
         return dados_completos, soma_ultimo_mes
     else:
@@ -158,7 +158,7 @@ def main():
         estacao_nome = row['Nome']
         codigo_estacao = row['Código']
         # Baixa os dados do último mês e obtém a som
-        
+         _, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial_str, data_final_str, login, senha)
         # Adiciona o marcador com a soma do último mês
         m.add_marker(location=[row['Latitude'], row['Longitude']], 
                      popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês:")
