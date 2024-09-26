@@ -100,7 +100,7 @@ def main():
     m.add_gdf(
         mg_gdf, 
         layer_name="Minas Gerais", 
-        style={"color": "blue", "weight": 2, "fillOpacity": 0.1, "interactive": False},  # 'interactive': False evita interações
+        style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},  # 'interactive': False evita interações
         info_mode=None
     )
 
