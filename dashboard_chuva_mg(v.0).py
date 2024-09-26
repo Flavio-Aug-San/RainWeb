@@ -23,15 +23,16 @@ gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Lati
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 
+# Recuperação do token
+token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
+login_payload = {'email': login, 'password': senha}
+response = requests.post(token_url, json=login_payload)
+content = response.json()
+token = content['token']
+
 # Função para baixar os dados da estação e retornar a soma do último mês
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
-    # Recuperação do token
-    token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
-    login_payload = {'email': login, 'password': senha}
-    response = requests.post(token_url, json=login_payload)
-    content = response.json()
-    token = content['token']
-
+    
     # Lista para armazenar os dados
     dfs = []
 
@@ -47,23 +48,23 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             df_mes = pd.read_csv(pd.compat.StringIO(r.text))
             dfs.append(df_mes)
 
-    # Verifica se há dados baixados
-    if dfs:
-        dados_completos = pd.concat(dfs, ignore_index=True)
-
-        # Converte a coluna 'Data' para o formato datetime (caso ainda não esteja)
-        dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
-
-        # Filtrar o último mês dos dados baixados
-        ultimo_mes = dados_completos['datahora'].max().strftime('%Y-%m')  # Filtra pelo ano e mês
-        dados_ultimo_mes = dados_completos[dados_completos['datahora'].dt.strftime('%Y-%m') == ultimo_mes]
-
-        # Calcula a soma dos valores do último mês (assumindo que a coluna de valores seja chamada 'Valor')
-        soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
-
-        return dados_completos, soma_ultimo_mes
-    else:
-        return pd.DataFrame(), 0
+        # Verifica se há dados baixados
+        if dfs:
+            dados_completos = pd.concat(dfs, ignore_index=True)
+    
+            # Converte a coluna 'Data' para o formato datetime (caso ainda não esteja)
+            dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
+    
+            # Filtrar o último mês dos dados baixados
+            ultimo_mes = dados_completos['datahora'].max().strftime('%Y-%m')  # Filtra pelo ano e mês
+            dados_ultimo_mes = dados_completos[dados_completos['datahora'].dt.strftime('%Y-%m') == ultimo_mes]
+    
+            # Calcula a soma dos valores do último mês (assumindo que a coluna de valores seja chamada 'Valor')
+            soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
+    
+            return dados_completos, soma_ultimo_mes
+        else:
+            return pd.DataFrame(), 0
 
 # Função principal do dashboard
 def main():
