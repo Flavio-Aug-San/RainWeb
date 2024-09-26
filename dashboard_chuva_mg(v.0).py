@@ -146,7 +146,7 @@ def main():
         estacao_nome = row['Nome']
         codigo_estacao = row['Código']
         # Baixa os dados do último mês e obtém a soma
-            soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+        soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
         
         # Adiciona o marcador com a soma do último mês
         m.add_marker(location=[row['Latitude'], row['Longitude']], 
