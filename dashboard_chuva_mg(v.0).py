@@ -149,7 +149,7 @@ def main():
         
         # Adiciona o marcador com a soma do último mês
         m.add_marker(location=[row['Latitude'], row['Longitude']], 
-                     popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês: {soma_ultimo_mes}")
+                     popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês:")
 
     # Exibe o mapa no Streamlit
     m.to_streamlit()
