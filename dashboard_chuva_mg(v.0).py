@@ -117,8 +117,8 @@ def main():
 
     if tipo_busca == 'Diária':
         # Seleção de datas para busca diária
-        data_inicial = st.sidebar.date_input("Data Inicial", value=datetime(2023, 1, 1))
-        data_final = st.sidebar.date_input("Data Final", value=datetime(2023, 12, 31))
+        data_inicial = st.sidebar.date_input("Data Inicial", value=data_inicial)
+        data_final = st.sidebar.date_input("Data Final", value=data_final)
     else:
         # Seleção de mês para busca mensal
         ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
