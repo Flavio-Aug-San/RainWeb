@@ -18,7 +18,7 @@ mg_gdf = gpd.read_file(shp_mg_url)
 
 # Carregar os dados das estações
 df = pd.read_csv(csv_file_path)
-gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
+gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['longitude'], df['latitude']))
 
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
@@ -106,7 +106,7 @@ def main():
 
     # Continua adicionando as estações meteorológicas
     for i, row in gdf_mg.iterrows():
-        m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
+        m.add_marker(location=[row['latitude'], row['longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
 
     # Sidebar para seleção de estação e datas
     st.sidebar.header("Filtros de Seleção")
@@ -160,8 +160,8 @@ def main():
         # Baixa os dados do último mês e obtém a som
         soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
         # Adiciona o marcador com a soma do último mês
-        m.add_marker(location=[row['Latitude'], row['Longitude']], 
-                     popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês:" {soma_ultimo_mes})
+        m.add_marker(location=[row['latitude'], row['longitude']], 
+                     popup=f"{estacao_nome} (Código: {codigo_estacao})\nSoma do último mês: {soma_ultimo_mes}")
 
     # Exibe o mapa no Streamlit
     m.to_streamlit()
