@@ -52,7 +52,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         dados_completos = pd.concat(dfs, ignore_index=True)
 
         # Converte a coluna 'Data' para o formato datetime (caso ainda não esteja)
-        dados_completos['Data'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
+        dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
 
         # Filtrar o último mês dos dados baixados
         ultimo_mes = dados_completos['datahora'].max().strftime('%Y-%m')  # Filtra pelo ano e mês
