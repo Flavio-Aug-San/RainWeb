@@ -59,7 +59,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         dados_ultimo_mes = dados_completos[dados_completos['datahora'].dt.strftime('%Y-%m') == ultimo_mes]
 
         # Calcula a soma dos valores do último mês (assumindo que a coluna de valores seja chamada 'Valor')
-        soma_ultimo_mes = dados_ultimo_mes['Valor'].sum()
+        soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
 
         return dados_completos, soma_ultimo_mes
     else:
