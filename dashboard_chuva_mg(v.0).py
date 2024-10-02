@@ -112,7 +112,7 @@ def main():
             fillColor= '#45647d',
             fillOpacity= 1,
             numberOfSides= 4,
-            rotation= 0,
+            rotation= 45,
             radius= 10,
             popup=f"{row['Nome']} (Código: {row['Código']})"
         ).add_to(m)
