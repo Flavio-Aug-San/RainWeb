@@ -106,14 +106,14 @@ def main():
     for i, row in gdf_mg.iterrows():
         folium.RegularPolygonMarker(
             location=[row['Latitude'], row['Longitude']],
-            color: 'black',
-            opacity: 1,
-            weight: 2,
-            fillColor: '#45647d',
-            fillOpacity: 1,
-            numberOfSides: 4,
-            rotation: 0,
-            radius: 10
+            color =  'black',
+            opacity= 1,
+            weight= 2,
+            fillColor= '#45647d',
+            fillOpacity= 1,
+            numberOfSides= 4,
+            rotation= 0,
+            radius= 10,
             popup=f"{row['Nome']} (Código: {row['Código']})"
         ).add_to(m)
     
