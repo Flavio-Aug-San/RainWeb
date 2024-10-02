@@ -44,15 +44,15 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             df_mes = pd.read_csv(pd.compat.StringIO(r.text))
             dfs.append(df_mes)
 
-    if dfs:
-        dados_completos = pd.concat(dfs, ignore_index=True)
-        dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
-        ultimo_mes = dados_completos['datahora'].max().strftime('%Y-%m')
-        dados_ultimo_mes = dados_completos[dados_completos['datahora'].dt.strftime('%Y-%m') == ultimo_mes]
-        soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
-        return dados_completos, soma_ultimo_mes
-    else:
-        return pd.DataFrame(), 0
+        if dfs:
+            dados_completos = pd.concat(dfs, ignore_index=True)
+            dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
+            ultimo_mes = dados_completos['valor'].max().strftime('%Y-%m')
+            dados_ultimo_mes = dados_completos[dados_completos['valor'].dt.strftime('%Y-%m') == ultimo_mes]
+            soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
+            return dados_completos, soma_ultimo_mes
+        else:
+            return pd.DataFrame(), 0
 
 # Função principal do dashboard
 def main():
