@@ -5,6 +5,7 @@ import requests
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
 import folium
+import glob
 from folium.plugins import MarkerCluster
 
 # URLs e caminhos de arquivos
