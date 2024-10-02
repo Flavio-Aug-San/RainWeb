@@ -57,19 +57,19 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         df0 = pd.read_csv(file, delimiter=';', skiprows=1)
     
         # junta a tabela que foi lida com a anterior
-        df = pd.concat([df, df0], ignore_index=True)
+        dfs = pd.concat([dfs, df0], ignore_index=True)
     
     # salva arquivo
-    df.to_csv(f'/content/merge_estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{data_inicial}_to_{data_final}.csv')
+    dfs.to_csv(f'/content/merge_estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{data_inicial}_to_{data_final}.csv')
     
     # seleciona o acumulado de vhuva
-    df = df[ df['sensor'] == 'chuva' ]
+    dfs = dfs[ dfs['sensor'] == 'chuva' ]
     
     # insere a coluna data como DateTime no DataFrame
-    df['datahora'] = pd.to_datetime(df['datahora'])
+    dfs['datahora'] = pd.to_datetime(df['datahora'])
     
     # seta a coluna data com o index do dataframe
-    df.set_index('datahora', inplace=True)
+    dfs.set_index('datahora', inplace=True)
 
     soma_selecionada = df['valor'].sum()
 
