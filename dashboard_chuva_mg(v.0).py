@@ -39,7 +39,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         ano_mes = ano_mes_dia.strftime('%Y%m')
         sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
         params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
-        r = requests.get(sws_url, params=params, headers={'token': token}
+        r = requests.get(sws_url, params=params, headers={'token': token})
         df_mes = pd.read_csv(pd.compat.StringIO(r.text))
         dfs.append(df_mes)
         with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
