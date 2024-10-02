@@ -43,8 +43,8 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         df_mes = pd.read_csv(pd.compat.StringIO(r.text))
         dfs.append(df_mes)
         with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
-        for dado in dados:
-            arquivo.write(str(dado))
+            for dado in dados:
+                arquivo.write(str(dado))
             
     files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
