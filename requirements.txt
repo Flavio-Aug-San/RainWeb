@@ -7,3 +7,4 @@ leafmap
 salem
 requests
 datetime
+folium
