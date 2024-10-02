@@ -87,9 +87,9 @@ def main():
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
         # Definir cor com base no valor
-        if soma_ultimo_mes <= 10:
+        if dados_estacao['valor'] <= 10:
             cor = 'green'
-        elif 10 < soma_ultimo_mes <= 30:
+        elif 10 < dados_estacao['valor'] <= 30:
             cor = 'yellow'
         else:
             cor = 'red'
