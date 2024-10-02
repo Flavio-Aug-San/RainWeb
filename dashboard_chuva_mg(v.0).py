@@ -112,7 +112,7 @@ def main():
             fill_color='white',  # Cor de preenchimento
             fill_opacity=0.6,
             popup=f"{row['Nome']} (Código: {row['Código']})"
-        ).add_to(marker_cluster)
+        )
 
     
     # Adiciona o shapefile de Minas Gerais ao mapa sem popups, tooltips ou alterações no cursor
