@@ -99,8 +99,8 @@ def main():
         unsafe_allow_html=True
     )
 
-    # Mapa interativo usando Leafmap
-    m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    # Criar um cluster de marcadores para agrupar os marcadores no mapa
+    marker_cluster = MarkerCluster().add_to(m)
 
     # Adicionar marcadores das estações meteorológicas em Minas Gerais no estilo fornecido
     for i, row in gdf_mg.iterrows():
@@ -112,8 +112,7 @@ def main():
             fill_color='white',  # Cor de preenchimento
             fill_opacity=0.6,
             popup=f"{row['Nome']} (Código: {row['Código']})"
-        )
-
+        ).add_to(marker_cluster)
     
     # Adiciona o shapefile de Minas Gerais ao mapa sem popups, tooltips ou alterações no cursor
     m.add_gdf(
