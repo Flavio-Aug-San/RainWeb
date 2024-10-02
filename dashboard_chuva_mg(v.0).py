@@ -126,10 +126,6 @@ def main():
         info_mode=None
     )
 
-    # Continua adicionando as estações meteorológicas
-    for i, row in gdf_mg.iterrows():
-        m.add_marker(location=[row['Latitude'], row['Longitude']], popup=f"{row['Nome']} (Código: {row['Código']})")
-
     # Sidebar para seleção de estação e datas
     st.sidebar.header("Filtros de Seleção")
 
