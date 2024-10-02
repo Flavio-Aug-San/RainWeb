@@ -39,20 +39,38 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         ano_mes = ano_mes_dia.strftime('%Y%m')
         sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
         params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
-        r = requests.get(sws_url, params=params, headers={'token': token})
-        if r.text:
-            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
-            dfs.append(df_mes)
+        r = requests.get(sws_url, params=params, headers={'token': token}
+        df_mes = pd.read_csv(pd.compat.StringIO(r.text))
+        dfs.append(df_mes)
+        with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
+        for dado in dados:
+            arquivo.write(str(dado))
+            
+    files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
-        if dfs:
-            dados_completos = pd.concat(dfs, ignore_index=True)
-            dados_completos['datahora'] = pd.to_datetime(dados_completos['datahora'], format='%Y-%m-%d %H:%M:%S')
-            ultimo_mes = dados_completos['valor'].max().strftime('%Y-%m')
-            dados_ultimo_mes = dados_completos[dados_completos['valor'].dt.strftime('%Y-%m') == ultimo_mes]
-            soma_ultimo_mes = dados_ultimo_mes['valor'].sum()
-            return dados_completos, soma_ultimo_mes
-        else:
-            return pd.DataFrame(), 0
+    # leitura dos arquivos
+    df = pd.DataFrame()
+    for file in files:
+    
+        # leitura da tabela
+        df0 = pd.read_csv(file, delimiter=';', skiprows=1)
+    
+        # junta a tabela que foi lida com a anterior
+        df = pd.concat([df, df0], ignore_index=True)
+    
+    # salva arquivo
+    df.to_csv(f'/content/merge_estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{data_inicial}_to_{data_final}.csv')
+    
+    # seleciona o acumulado de vhuva
+    df = df[ df['sensor'] == 'chuva' ]
+    
+    # insere a coluna data como DateTime no DataFrame
+    df['datahora'] = pd.to_datetime(df['datahora'])
+    
+    # seta a coluna data com o index do dataframe
+    df.set_index('datahora', inplace=True)
+
+    soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
 def main():
@@ -87,9 +105,9 @@ def main():
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
         # Definir cor com base no valor
-        if dados_estacao['valor'] <= 10:
+        if soma_selecionada <= 10:
             cor = 'green'
-        elif 10 < dados_estacao['valor'] <= 30:
+        elif 10 <soma_selecionada <= 30:
             cor = 'yellow'
         else:
             cor = 'red'
@@ -105,7 +123,7 @@ def main():
             numberOfSides=4,
             rotation=45,
             radius=10,
-            popup=f"{row['Nome']} (Código: {row['Código']})<br>Soma do último mês: {soma_ultimo_mes}"
+            popup=f"{row['Nome']} (Código: {row['Código']})<br>Soma do último mês: {soma_selecionada}"
         ).add_to(m)
 
     m.add_gdf(
@@ -140,7 +158,7 @@ def main():
     if st.sidebar.button("Baixar Dados"):
         data_inicial_str = data_inicial.strftime('%Y%m%d')
         data_final_str = data_final.strftime('%Y%m%d')
-        dados_estacao, soma_ultimo_mes = baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+        dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
 
         if not dados_estacao.empty:
             st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
