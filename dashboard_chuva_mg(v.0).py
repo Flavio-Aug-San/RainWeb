@@ -4,6 +4,8 @@ import geopandas as gpd
 import requests
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
+import folium
+from folium.plugins import MarkerCluster
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
