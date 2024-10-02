@@ -99,6 +99,9 @@ def main():
         unsafe_allow_html=True
     )
 
+    # Mapa interativo usando Leafmap
+    m = leafmap.Map(center=[-18.5122, -44.5550], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+
     # Criar um cluster de marcadores para agrupar os marcadores no mapa
     marker_cluster = MarkerCluster().add_to(m)
 
