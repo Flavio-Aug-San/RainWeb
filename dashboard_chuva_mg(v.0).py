@@ -100,7 +100,7 @@ def main():
     )
 
     # Mapa interativo usando Leafmap
-    m = leafmap.Map(center=[-19.00, -44.38], zoom=8, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-19.00, -44.38], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
     # Adicionar marcadores das estações meteorológicas em Minas Gerais no estilo fornecido
     for i, row in gdf_mg.iterrows():
