@@ -60,7 +60,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         dfs = pd.concat([dfs, df0], ignore_index=True)
 
 
-    soma_selecionada = df['valor'].sum()
+    soma_selecionada = dfs['valor'].sum()
 
 # Função principal do dashboard
 def main():
