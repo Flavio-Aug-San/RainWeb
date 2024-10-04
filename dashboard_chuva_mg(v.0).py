@@ -59,9 +59,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # junta a tabela que foi lida com a anterior
         dfs = pd.concat([dfs, df0], ignore_index=True)
     
-    # salva arquivo
-    dfs.to_csv(f'/content/merge_estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{data_inicial}_to_{data_final}.csv')
-    
     # seleciona o acumulado de vhuva
     dfs = dfs[ dfs['sensor'] == 'chuva' ]
     
