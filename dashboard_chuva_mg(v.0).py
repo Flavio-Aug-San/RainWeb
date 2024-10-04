@@ -106,7 +106,7 @@ def main():
             weight=2,
             fillColor='green',
             fillOpacity=1,
-            numberOfSides=4,
+            numberOfSides=20,
             rotation=45,
             radius=10,
             popup=f"{row['Nome']} (Código: {row['Código']})<br>Soma do último mês:"
