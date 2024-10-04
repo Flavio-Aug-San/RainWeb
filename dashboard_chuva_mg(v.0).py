@@ -58,12 +58,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     
         # junta a tabela que foi lida com a anterior
         dfs = pd.concat([dfs, df0], ignore_index=True)
-    
-    # insere a coluna data como DateTime no DataFrame
-    dfs['datahora'] = pd.to_datetime(df['datahora'])
-    
-    # seta a coluna data com o index do dataframe
-    dfs.set_index('datahora', inplace=True)
+
 
     soma_selecionada = df['valor'].sum()
 
