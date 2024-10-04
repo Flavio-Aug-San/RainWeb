@@ -103,7 +103,7 @@ def main():
     for i, row in gdf_mg.iterrows():
         # Baixar dados da estação
         codigo_estacao = row['Código']
-        dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
+        # dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
         # Definir cor com base no valor
         if soma_selecionada <= 10:
@@ -159,7 +159,7 @@ def main():
     if st.sidebar.button("Baixar Dados"):
         data_inicial_str = data_inicial.strftime('%Y%m%d')
         data_final_str = data_final.strftime('%Y%m%d')
-        dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+        # dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
 
         if not dados_estacao.empty:
             st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
