@@ -43,9 +43,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         r = requests.get(sws_url, params=params, headers={'token': token})
         df_mes = pd.read_csv(pd.compat.StringIO(r.text))
         dfs.append(df_mes)
-        #with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
-            #for df in dfs:
-                #arquivo.write(str(dado))
             
     files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
@@ -59,8 +56,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # junta a tabela que foi lida com a anterior
         dfs = pd.concat([dfs, df0], ignore_index=True)
 
-
-    soma_selecionada = dfs['valor'].sum()
+    #soma_selecionada = dfs['valor'].sum()
 
 # Função principal do dashboard
 def main():
@@ -95,12 +91,12 @@ def main():
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
         # Definir cor com base no valor
-        if soma_selecionada <= 10:
-            cor = 'green'
-        elif 10 <soma_selecionada <= 30:
-            cor = 'yellow'
-        else:
-            cor = 'red'
+        #if soma_selecionada <= 10:
+            #cor = 'green'
+        #elif 10 <soma_selecionada <= 30:
+           # cor = 'yellow'
+       # else:
+         #   cor = 'red'
 
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
