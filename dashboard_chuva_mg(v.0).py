@@ -120,9 +120,9 @@ def main():
     )
 
     st.sidebar.header("Filtros de Seleção")
-    modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Nome'))
+    modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
-    if modo_selecao == 'Nome':
+    if modo_selecao == 'Código':
         estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
         codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
 
