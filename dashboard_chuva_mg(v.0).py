@@ -104,7 +104,7 @@ def main():
             color='black',
             opacity=1,
             weight=2,
-            fillColor=cor,
+            fillColor='green',
             fillOpacity=1,
             numberOfSides=4,
             rotation=45,
