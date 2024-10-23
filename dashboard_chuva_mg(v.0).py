@@ -163,10 +163,6 @@ def main():
         style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
         info_mode=None
     )
-
-
-    # Chamando a função para exibir o popup
-    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
     
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
@@ -197,7 +193,10 @@ def main():
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
 
-    m.to_streamlit()
+    m.to_streamlit(
+    # Chamando a função para exibir o popup
+    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+    )
 
 if __name__ == "__main__":
     main()
