@@ -44,17 +44,22 @@ token = content['token']
 
 # Função para exibir o pop-up no canto inferior direito
 def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
-    st.markdown(
-    """
+    st.markdown("""
     <style>
-        .main .block-container {
-            padding: 0;
-            margin: 0;
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
         }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
     # Conteúdo do popup
     st.markdown(f"""
@@ -110,20 +115,16 @@ def main():
     st.set_page_config(layout="wide")
 
     st.markdown(
-        """
-        <style>
-            .main .block-container {
-                padding: 0;
-                margin: 0;
-            }
-            iframe {
-                height: 100vh !important;
-                width: 100vw !important;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    """
+    <style>
+        .main .block-container {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
     m = leafmap.Map(center=[-21.5, -45.75], zoom=10, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=False)
 
