@@ -10,7 +10,7 @@ from folium.plugins import MarkerCluster
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
-csv_file_path = 'input;/estacoes_filtradas(1).csv'
+csv_file_path = 'input;/estcaos_filtradas(1).csv'
 
 # Login e senha do CEMADEN (previamente fornecidos)
 login = 'augustoflaviobob@gmail.com'
