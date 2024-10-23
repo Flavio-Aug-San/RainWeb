@@ -8,3 +8,4 @@ salem
 requests
 datetime
 folium
+numpy
