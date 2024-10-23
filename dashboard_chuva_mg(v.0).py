@@ -50,7 +50,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
     # leitura dos arquivos
-    dfs = pd.DataFrame()
+    #dfs = pd.DataFrame()
     for file in files:
     
         # leitura da tabela
