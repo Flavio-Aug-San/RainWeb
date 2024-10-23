@@ -96,13 +96,13 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             df = pd.concat([df, df0], ignore_index=True)
     
         # insere a coluna data como DateTime no DataFrame
-        df['datahora'] = pd.to_datetime(df['datahora'])
+        #df['datahora'] = pd.to_datetime(df['datahora'])
         
         # seta a coluna data com o index do dataframe
-        df.set_index('datahora', inplace=True)
+        #df.set_index('datahora', inplace=True)
     
         # seleciona o acumulado de vhuva
-        dfs = df[df['sensor'] == 'chuva']
+        #dfs = df[df['sensor'] == 'chuva']
         
     #soma_selecionada = df['valor'].sum()
 
