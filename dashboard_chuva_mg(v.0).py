@@ -114,7 +114,7 @@ def main():
             numberOfSides=2,
             rotation=45,
             radius=10,
-            popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:{soma_selecionada}"
+            popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
         ).add_to(m)
 
     m.add_gdf(
