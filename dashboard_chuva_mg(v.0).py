@@ -10,7 +10,7 @@ from folium.plugins import MarkerCluster
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
-# csv_file_path = 'input;/lista_das_estacoes_CEMADEN_13maio2024.csv'
+csv_file_path = 'input;/estacoes_filtradas.csv'
 
 # Login e senha do CEMADEN (previamente fornecidos)
 login = 'augustoflaviobob@gmail.com'
@@ -23,11 +23,11 @@ mg_gdf = gpd.read_file(shp_mg_url)
 codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
 
 # Carregar os dados das estações
-#df = pd.read_csv(csv_file_path)
-#gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
+df = pd.read_csv(csv_file_path)
+gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
 
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
-#gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
+gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 
 # Recuperação do token
 token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
@@ -126,8 +126,8 @@ def main():
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
     if modo_selecao == 'Código':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", codigo_estacao['Código'].unique())
-        codigo_estacao = codigo_estacao[codigo_estacao['Código'] == estacao_selecionada]['Código'].values[0]
+        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Código'].unique())
+        codigo_estacao = gdf_mg[gdf_mg['Código'] == estacao_selecionada]['Código'].values[0]
 
     sigla_estado = 'MG'
     tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
