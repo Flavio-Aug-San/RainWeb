@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import geopandas as gpd
 import requests
+import numpy as np
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
 import folium
