@@ -23,7 +23,7 @@ mg_gdf = gpd.read_file(shp_mg_url)
 codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
 
 # Carregar os dados das estações
-df = pd.read_csv(csv_file_path)
+df = pd.read_csv(csv_file_path, delimiter = ';')
 gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
 
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
