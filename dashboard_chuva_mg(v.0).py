@@ -103,7 +103,7 @@ def main():
 
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
-            location=[row['Latitude'], row['Longitude']],
+            location=[row['latitude'], row['longitude']],
             color='black',
             opacity=1,
             weight=2,
@@ -112,7 +112,7 @@ def main():
             numberOfSides=2,
             rotation=45,
             radius=10,
-            popup=f"{row['Nome']} (Código: {row['Código']})<br>Soma do último mês:"
+            popup=f"{row['Nome']} (Código: {row['codEstacao']})<br>Soma do último mês:"
         ).add_to(m)
 
     m.add_gdf(
@@ -126,8 +126,8 @@ def main():
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
     if modo_selecao == 'Código':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Código'].unique())
-        codigo_estacao = gdf_mg[gdf_mg['Código'] == estacao_selecionada]['Código'].values[0]
+        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
+        codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
     sigla_estado = 'MG'
     tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
