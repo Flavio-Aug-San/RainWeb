@@ -67,9 +67,9 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     df.set_index('datahora', inplace=True)
 
     # seleciona o acumulado de vhuva
-    df = df[df['sensor'] == 'chuva']
+    #df = df[df['sensor'] == 'chuva']
     
-soma_selecionada = df['longitude'].sum()
+#soma_selecionada = df['longitude'].sum()
 
 # Função principal do dashboard
 def main():
@@ -95,7 +95,7 @@ def main():
         unsafe_allow_html=True
     )
 
-    m = leafmap.Map(center=[-21.5, -45.75], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=False)
+    m = leafmap.Map(center=[-21.5, -45.75], zoom=10, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=False)
 
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
@@ -112,6 +112,8 @@ def main():
          #   cor = 'red'
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
+            center=[-21.5, -45.75],
+            zoom=10,
             location=[row['latitude'], row['longitude']],
             color='black',
             opacity=1,
