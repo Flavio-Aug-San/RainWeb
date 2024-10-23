@@ -51,8 +51,8 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
             bottom: 20px;
             right: 20px;
             width: 250px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
             padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
