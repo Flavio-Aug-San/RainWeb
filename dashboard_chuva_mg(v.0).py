@@ -59,7 +59,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # junta a tabela que foi lida com a anterior
         dfs = pd.concat([dfs, df0], ignore_index=True)
 
-    #soma_selecionada = dfs['valor'].sum()
+    soma_selecionada = dfs['valor'].sum()
 
 # Função principal do dashboard
 def main():
@@ -85,7 +85,7 @@ def main():
         unsafe_allow_html=True
     )
 
-    m = leafmap.Map(center=[-21.5, -45.75], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-21.5, -45.75], zoom=7, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=False)
 
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
@@ -101,19 +101,19 @@ def main():
        # else:
          #   cor = 'red'
 
-        # Adicionar marcador com valor
-        folium.RegularPolygonMarker(
-            location=[row['latitude'], row['longitude']],
-            color='black',
-            opacity=1,
-            weight=2,
-            fillColor='green',
-            fillOpacity=1,
-            numberOfSides=2,
-            rotation=45,
-            radius=10,
-            popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
-        ).add_to(m)
+    # Adicionar marcador com valor
+    folium.RegularPolygonMarker(
+        location=[row['latitude'], row['longitude']],
+        color='black',
+        opacity=1,
+        weight=2,
+        fillColor='green',
+        fillOpacity=1,
+        numberOfSides=2,
+        rotation=45,
+        radius=10,
+        popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
+    ).add_to(m)
 
     m.add_gdf(
         mg_gdf, 
