@@ -60,9 +60,9 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         dfs = pd.concat([dfs, df0], ignore_index=True)
 
     # seleciona o acumulado de vhuva
-    df = dfs[ dfs['sensor'] == 'chuva' ]
+    #df = dfs[ dfs['sensor'] == 'chuva' ]
     
-    soma_selecionada = df['valor'].sum()
+    #soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
 def main():
