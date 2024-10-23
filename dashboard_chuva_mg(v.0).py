@@ -50,19 +50,19 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
     # leitura dos arquivos
-    dfs = pd.DataFrame()
+    df = pd.DataFrame()
     for file in files:
     
         # leitura da tabela
         df0 = pd.read_csv(file, delimiter=';', skiprows=1)
     
         # junta a tabela que foi lida com a anterior
-        dfs = pd.concat([dfs, df0], ignore_index=True)
+        df = pd.concat([df, df0], ignore_index=True)
 
     # seleciona o acumulado de vhuva
-    #df = dfs[ dfs['sensor'] == 'chuva' ]
+    df = df[ df['sensor'] == 'chuva' ]
     
-    #soma_selecionada = df['valor'].sum()
+soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
 def main():
