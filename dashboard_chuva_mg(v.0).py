@@ -44,22 +44,17 @@ token = content['token']
 
 # Função para exibir o pop-up no canto inferior direito
 def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
-    st.markdown("""
+    st.markdown(
+    """
     <style>
-        .popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 250px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-family: Arial, sans-serif;
+        .main .block-container {
+            padding: 0;
+            margin: 0;
         }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
     # Conteúdo do popup
     st.markdown(f"""
