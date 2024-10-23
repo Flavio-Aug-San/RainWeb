@@ -8,6 +8,11 @@ import folium
 import glob
 from folium.plugins import MarkerCluster
 
+# Simulação de dados (soma de chuva em mm) - substitua por seus dados reais
+chuva_ultima_hora = np.random.uniform(0, 5)  # Exemplo de valor entre 0 e 5mm
+chuva_ultimas_24_horas = np.random.uniform(5, 50)  # Exemplo de valor entre 5 e 50mm
+chuva_ultimas_48_horas = np.random.uniform(20, 100)  # Exemplo de valor entre 20 e 100mm
+
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
 csv_file_path = 'input;/estcaos_filtradas(1).csv'
@@ -36,6 +41,35 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
+# Função para exibir o pop-up no canto inferior direito
+def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
+    st.markdown("""
+    <style>
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Conteúdo do popup
+    st.markdown(f"""
+    <div class="popup">
+        <h4>Informações de Chuva</h4>
+        <p>Chuva na última hora: {chuva_ultima_hora:.2f} mm</p>
+        <p>Chuva nas últimas 24 horas: {chuva_ultimas_24_horas:.2f} mm</p>
+        <p>Chuva nas últimas 48 horas: {chuva_ultimas_48_horas:.2f} mm</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 # Função para baixar os dados do último mês e retornar a soma
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
     dfs = []
@@ -60,7 +94,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             # junta a tabela que foi lida com a anterior
             df = pd.concat([df, df0], ignore_index=True)
     
-        
         # insere a coluna data como DateTime no DataFrame
         df['datahora'] = pd.to_datetime(df['datahora'])
         
@@ -134,6 +167,10 @@ def main():
         info_mode=None
     )
 
+
+    # Chamando a função para exibir o popup
+    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+    
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
