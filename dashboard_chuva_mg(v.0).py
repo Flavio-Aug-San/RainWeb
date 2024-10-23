@@ -100,20 +100,19 @@ def main():
            # cor = 'yellow'
        # else:
          #   cor = 'red'
-
-    # Adicionar marcador com valor
-    folium.RegularPolygonMarker(
-        location=[row['latitude'], row['longitude']],
-        color='black',
-        opacity=1,
-        weight=2,
-        fillColor='green',
-        fillOpacity=1,
-        numberOfSides=2,
-        rotation=45,
-        radius=10,
-        popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
-    ).add_to(m)
+        # Adicionar marcador com valor
+        folium.RegularPolygonMarker(
+            location=[row['latitude'], row['longitude']],
+            color='black',
+            opacity=1,
+            weight=2,
+            fillColor='green',
+            fillOpacity=1,
+            numberOfSides=2,
+            rotation=45,
+            radius=10,
+            popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
+        ).add_to(m)
 
     m.add_gdf(
         mg_gdf, 
