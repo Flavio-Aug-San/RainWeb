@@ -59,6 +59,13 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # junta a tabela que foi lida com a anterior
         df = pd.concat([df, df0], ignore_index=True)
 
+    
+    # insere a coluna data como DateTime no DataFrame
+    df['datahora'] = pd.to_datetime(df['datahora'])
+    
+    # seta a coluna data com o index do dataframe
+    df.set_index('datahora', inplace=True)
+
     # seleciona o acumulado de vhuva
     df = df[df['sensor'] == 'chuva']
     
