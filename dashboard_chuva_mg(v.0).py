@@ -123,7 +123,7 @@ def main():
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
     if modo_selecao == 'Código':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Nome'].unique())
+        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Código'].unique())
         codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
 
     latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
@@ -133,8 +133,7 @@ def main():
     tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
 
     if tipo_busca == 'Diária':
-        data_inicial = st.sidebar.date_input("Data Inicial", value=data_inicial)
-        data_final = st.sidebar.date_input("Data Final", value=data_final)
+        data_inicial = st.sidebar.date_input("Data", value=data_inicial)
     else:
         ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
         mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
