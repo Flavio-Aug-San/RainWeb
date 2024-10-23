@@ -45,7 +45,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
         r = requests.get(sws_url, params=params, headers={'token': token})
         df_mes = pd.read_csv(pd.compat.StringIO(r.text))
-        dfs.append(df_mes)
+        df.append(df_mes)
             
     files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
@@ -60,12 +60,12 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         df = pd.concat([df, df0], ignore_index=True)
 
     # seleciona o acumulado de vhuva
-    #df = df[df['sensor'] == 'chuva']
+    df = df[df['sensor'] == 'chuva']
     
-#soma_selecionada = df['Valor'].sum()
+soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
-def main():
+ def main():
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
     data_final = hoje
