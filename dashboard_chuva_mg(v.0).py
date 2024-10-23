@@ -59,6 +59,8 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # junta a tabela que foi lida com a anterior
         dfs = pd.concat([dfs, df0], ignore_index=True)
 
+    dfs = dfs[dfs['sensor']=='chuva']
+    
     soma_selecionada = dfs['Valor'].sum()
 
 # Função principal do dashboard
