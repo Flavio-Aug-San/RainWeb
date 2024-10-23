@@ -65,7 +65,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
- def main():
+def main():
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
     data_final = hoje
