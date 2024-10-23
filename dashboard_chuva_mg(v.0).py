@@ -91,7 +91,6 @@ def main():
     for i, row in gdf_mg.iterrows():
         # Baixar dados da estação
         codigo_estacao = row['Código']
-        #aux = codigo_estacao[row]
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
         # Definir cor com base no valor
