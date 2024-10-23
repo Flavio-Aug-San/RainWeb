@@ -39,37 +39,38 @@ token = content['token']
 # Função para baixar os dados do último mês e retornar a soma
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
     dfs = []
-    for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-        ano_mes = ano_mes_dia.strftime('%Y%m')
-        sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
-        params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
-        r = requests.get(sws_url, params=params, headers={'token': token})
-        df_mes = pd.read_csv(pd.compat.StringIO(r.text))
-        df.append(df_mes)
-            
-    files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
-
-    # leitura dos arquivos
-    df = pd.DataFrame()
-    for file in files:
+    for estacao in codigo_estacao: 
+        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+            ano_mes = ano_mes_dia.strftime('%Y%m')
+            sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
+            params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
+            r = requests.get(sws_url, params=params, headers={'token': token})
+            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
+            df.append(df_mes)
+                
+        files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
     
-        # leitura da tabela
-        df0 = pd.read_csv(file, delimiter=';', skiprows=1)
+        # leitura dos arquivos
+        df = pd.DataFrame()
+        for file in files:
+        
+            # leitura da tabela
+            df0 = pd.read_csv(file, delimiter=';', skiprows=1)
+        
+            # junta a tabela que foi lida com a anterior
+            df = pd.concat([df, df0], ignore_index=True)
     
-        # junta a tabela que foi lida com a anterior
-        df = pd.concat([df, df0], ignore_index=True)
-
+        
+        # insere a coluna data como DateTime no DataFrame
+        df['datahora'] = pd.to_datetime(df['datahora'])
+        
+        # seta a coluna data com o index do dataframe
+        df.set_index('datahora', inplace=True)
     
-    # insere a coluna data como DateTime no DataFrame
-    #df['datahora'] = pd.to_datetime(df['datahora'])
-    
-    # seta a coluna data com o index do dataframe
-    #df.set_index('datahora', inplace=True)
-
-    # seleciona o acumulado de vhuva
-    #df = df[df['sensor'] == 'chuva']
-    
-#soma_selecionada = df['longitude'].sum()
+        # seleciona o acumulado de vhuva
+        dfs = df[df['sensor'] == 'chuva']
+        
+    #soma_selecionada = df['valor'].sum()
 
 # Função principal do dashboard
 def main():
