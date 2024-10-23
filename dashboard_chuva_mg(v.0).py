@@ -124,7 +124,7 @@ def main():
 
     if modo_selecao == 'Código':
         estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['Código'].unique())
-        codigo_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Código'].values[0]
+        codigo_estacao = gdf_mg[gdf_mg['Código'] == estacao_selecionada]['Código'].values[0]
 
     latitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Latitude'].values[0]
     longitude_estacao = gdf_mg[gdf_mg['Nome'] == estacao_selecionada]['Longitude'].values[0]
