@@ -43,9 +43,6 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
-# Seleção da estação
-estacao_selecionada = st.selectbox("Selecione a Estação", list(codigo_estacao))
-
 # Obter os valores de precipitação da estação selecionada
 dados_chuva = df['valorMedida']
 chuva_ultima_hora = dados_chuva[0]
@@ -53,7 +50,7 @@ chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
 
 # Estado para controlar exibição do gráfico
-mostrar_grafico = st.session_state.get('mostrar_grafico', False)
+#mostrar_grafico = st.session_state.get('mostrar_grafico', False)
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
