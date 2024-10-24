@@ -188,6 +188,9 @@ def main():
             st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
+
+    # Estado para controlar exibição do gráfico
+    mostrar_grafico = st.session_state.get('mostrar_grafico', False)
     # Botões para exibir e fechar gráficos
     if not mostrar_grafico:
         if st.sidebar.button("Mostrar Gráfico"):
@@ -197,8 +200,7 @@ def main():
     else:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
         mostrar_graficos()
-    # Estado para controlar exibição do gráfico
-    mostrar_grafico = st.session_state.get('mostrar_grafico', False)
+
     
     m.to_streamlit()
     # Chamando a função para exibir o popup
