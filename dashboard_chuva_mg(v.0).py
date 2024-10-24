@@ -201,14 +201,27 @@ def main():
     # Lógica de controle do gráfico
     if mostrar:
         st.session_state['mostrar_grafico'] = True
-    if fechar:
-        st.session_state['mostrar_grafico'] = False
 
-    # Exibir o gráfico se o estado estiver ativo
-    if st.session_state['mostrar_grafico']:
-        st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
-        mostrar_graficos()
-            
+    # Verificação para exibir o gráfico com o botão "X" de fechar
+if st.session_state['mostrar_grafico']:
+    st.markdown(
+        """
+        <div style="position: relative;">
+            <div style="position: absolute; top: 0; right: 0;">
+                <button onclick="document.getElementById('grafico').style.display = 'none';"
+                        style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                    X
+                </button>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<div id='grafico'>", unsafe_allow_html=True)
+    mostrar_graficos()
+    st.markdown("</div>", unsafe_allow_html=True)
+    
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
