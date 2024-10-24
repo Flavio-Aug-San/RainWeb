@@ -142,7 +142,7 @@ def main():
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    st.set_page_config(layout="wide")
+    #st.set_page_config(layout="wide")
 
     st.markdown(
     """
