@@ -167,7 +167,7 @@ def main():
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
             center=[-21.5, -45.75],
-            zoom=10,
+            zoom=20,
             location=[row['latitude'], row['longitude']],
             color='black',
             opacity=1,
