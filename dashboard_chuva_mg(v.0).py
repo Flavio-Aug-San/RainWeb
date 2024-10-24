@@ -90,9 +90,9 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     st.markdown(f"""
     <div class="popup">
         <h4>Informações de Chuva</h4>
-        <p>Chuva na última hora: {chuva_ultima_hora:.2f} mm</p>
-        <p>Chuva nas últimas 24 horas: {chuva_ultimas_24_horas:.2f} mm</p>
-        <p>Chuva nas últimas 48 horas: {chuva_ultimas_48_horas:.2f} mm</p>
+        <p>Chuva na última hora: {chuva_ultima_hora} mm</p>
+        <p>Chuva nas últimas 24 horas: {chuva_ultimas_24_horas} mm</p>
+        <p>Chuva nas últimas 48 horas: {chuva_ultimas_48_horas} mm</p>
     </div>
     """, unsafe_allow_html=True)
 
