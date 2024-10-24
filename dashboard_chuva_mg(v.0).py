@@ -194,27 +194,27 @@ def main():
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
         
-        # Adicionar botão na barra lateral para exibir gráfico
-        mostrar = st.sidebar.button("Mostrar Gráfico")
+    # Adicionar botão na barra lateral para exibir gráfico
+    mostrar = st.sidebar.button("Mostrar Gráfico")
+    
+    # Lógica de controle do gráfico
+    if mostrar:
+        st.session_state['mostrar_grafico'] = True
+    
+    # Adicionar botão de fechar com "X"
+    if st.session_state['mostrar_grafico']:
+        close_button = st.button("X Fechar Gráfico", key="close_graph")
+    
+        if close_button:
+            st.session_state['mostrar_grafico'] = False
+    
+    # Exibição do gráfico
+    if st.session_state['mostrar_grafico']:
+        mostrar_graficos()
         
-        # Lógica de controle do gráfico
-        if mostrar:
-            st.session_state['mostrar_grafico'] = True
-        
-        # Adicionar botão de fechar com "X"
-        if st.session_state['mostrar_grafico']:
-            close_button = st.button("X Fechar Gráfico", key="close_graph")
-        
-            if close_button:
-                st.session_state['mostrar_grafico'] = False
-        
-        # Exibição do gráfico
-        if st.session_state['mostrar_grafico']:
-            mostrar_graficos()
-            
-        m.to_streamlit()
-        # Chamando a função para exibir o popup
-        exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
-        
+    m.to_streamlit()
+    # Chamando a função para exibir o popup
+    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+    
 if __name__ == "__main__":
     main()
