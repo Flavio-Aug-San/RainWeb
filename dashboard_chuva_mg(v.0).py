@@ -195,16 +195,13 @@ def main():
     mostrar_grafico = st.session_state.get('mostrar_grafico', False)
     
     # Botões para exibir e fechar gráficos
-    if mostrar_grafico:
+    if not mostrar_grafico:
         if st.sidebar.button("Mostrar Gráfico"):
             st.session_state['mostrar_grafico'] = True
-        if st.sidebar.button("Fechar Gráfico"):
-            st.session_state['mostrar_grafico'] = False
-    else:
-        st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
+    if st.sidebar.button("Fechar Gráfico"):
+        st.session_state['mostrar_grafico'] = False
         mostrar_graficos()
 
-    
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
