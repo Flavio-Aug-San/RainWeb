@@ -189,6 +189,8 @@ def main():
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
-
+    # Botão para mostrar gráficos
+    if st.button("Mostrar Gráficos", key="mostrar_graficos"):
+        mostrar_graficos()
 if __name__ == "__main__":
     main()
