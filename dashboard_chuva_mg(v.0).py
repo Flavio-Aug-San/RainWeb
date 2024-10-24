@@ -134,13 +134,6 @@ def main():
         codigo_estacao = row['codEstacao']
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
-        # Definir cor com base no valor
-        #if soma_selecionada <= 10:
-            #cor = 'green'
-        #elif 10 <soma_selecionada <= 30:
-           # cor = 'yellow'
-       # else:
-         #   cor = 'red'
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
             center=[-21.5, -45.75],
@@ -154,7 +147,7 @@ def main():
             numberOfSides=2,
             rotation=45,
             radius=10,
-            popup=f"{row['municipio']} (Código: {row['codEstacao']})<br>Soma do último mês:"
+            popup=f"{row['municipio']} (Código: {row['codEstacao']})"
         ).add_to(m)
 
     m.add_gdf(
