@@ -57,7 +57,6 @@ if 'mostrar_grafico' not in st.session_state:
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
-    st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
     horas = ['Última Hora', '24 Horas', '48 Horas']
     chuva_valores = [chuva_ultima_hora, chuva_24h, chuva_48h]
     
@@ -207,6 +206,7 @@ def main():
 
     # Exibir o gráfico se o estado estiver ativo
     if st.session_state['mostrar_grafico']:
+        st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
         mostrar_graficos()
             
     m.to_streamlit()
