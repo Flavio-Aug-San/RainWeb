@@ -47,7 +47,7 @@ token = content['token']
 estacao_selecionada = st.selectbox("Selecione a Estação", list(df['codEstacao'].keys()))
 
 # Obter os valores de precipitação da estação selecionada
-dados_chuva = df[estacao_selecionada]
+dados_chuva = df['valorMedida']
 chuva_ultima_hora = dados_chuva[0]
 chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
