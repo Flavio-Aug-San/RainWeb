@@ -196,7 +196,6 @@ def main():
 
      # Adicionar botões na barra lateral
     mostrar = st.sidebar.button("Mostrar Gráfico")
-    fechar = st.sidebar.button("Fechar Gráfico")
 
     # Lógica de controle do gráfico
     if mostrar:
