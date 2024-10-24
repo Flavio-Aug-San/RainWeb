@@ -168,12 +168,6 @@ def main():
     
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
-    # Botões para exibir e fechar gráficos
-    if not mostrar_grafico:
-        if st.button("Mostrar Gráfico"):
-            st.session_state['mostrar_grafico'] = True
-    if st.button("Fechar Gráfico"):
-        st.session_state['mostrar_grafico'] = False
     
     else:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
@@ -203,7 +197,12 @@ def main():
             st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
-    
+    # Botões para exibir e fechar gráficos
+    if not mostrar_grafico:
+        if st.sidebar.button("Mostrar Gráfico"):
+            st.session_state['mostrar_grafico'] = True
+    if st.sidebar.button("Fechar Gráfico"):
+        st.session_state['mostrar_grafico'] = False
         
     m.to_streamlit()
     # Chamando a função para exibir o popup
