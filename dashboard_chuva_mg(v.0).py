@@ -195,14 +195,16 @@ def main():
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
 
-        # Adicionar botões na barra lateral
-    if st.session_state['mostrar_grafico']:
-        if   st.sidebar.button("Mostrar Gráfico"):
-                st.session_state['mostrar_grafico'] = True
-        else:
-            st.sidebar.button("Fechar Gráfico"):
-                st.session_state['mostrar_grafico'] = False
-    
+     # Adicionar botões na barra lateral
+    mostrar = st.sidebar.button("Mostrar Gráfico")
+    fechar = st.sidebar.button("Fechar Gráfico")
+
+    # Lógica de controle do gráfico
+    if mostrar:
+        st.session_state['mostrar_grafico'] = True
+    if fechar:
+        st.session_state['mostrar_grafico'] = False
+
     # Exibir o gráfico se o estado estiver ativo
     if st.session_state['mostrar_grafico']:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
