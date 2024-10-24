@@ -204,6 +204,8 @@ def main():
     # Adicionar botão de fechar com "X"
     if st.session_state['mostrar_grafico']:
         close_button = st.button("X", key="close_graph")
+
+    else:
         st.session_state['mostrar_grafico'] = False
     
     # Exibição do gráfico
