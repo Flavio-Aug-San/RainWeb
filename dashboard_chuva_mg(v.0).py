@@ -203,21 +203,21 @@ def main():
         st.session_state['mostrar_grafico'] = True
 
     # Verificação para exibir o gráfico com o botão "X" de fechar
-if st.session_state['mostrar_grafico']:
-    st.markdown(
-        """
-        <div style="position: relative;">
-            <div style="position: absolute; top: 0; right: 0;">
-                <button onclick="document.getElementById('grafico').style.display = 'none';"
-                        style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-                    X
-                </button>
+    if st.session_state['mostrar_grafico']:
+        st.markdown(
+            """
+            <div style="position: relative;">
+                <div style="position: absolute; top: 0; right: 0;">
+                    <button onclick="document.getElementById('grafico').style.display = 'none';"
+                            style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                        X
+                    </button>
+                </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+            """,
+            unsafe_allow_html=True
+        )
+    
     st.markdown("<div id='grafico'>", unsafe_allow_html=True)
     mostrar_graficos()
     st.markdown("</div>", unsafe_allow_html=True)
