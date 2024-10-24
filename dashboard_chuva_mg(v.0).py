@@ -44,7 +44,7 @@ content = response.json()
 token = content['token']
 
 # Seleção da estação
-estacao_selecionada = st.selectbox("Selecione a Estação", list(codigo_estacao.keys()))
+estacao_selecionada = st.selectbox("Selecione a Estação", list(df.keys()))
 
 # Obter os valores de precipitação da estação selecionada
 dados_chuva = df[estacao_selecionada]
