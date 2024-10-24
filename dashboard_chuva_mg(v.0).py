@@ -156,7 +156,7 @@ def main():
     unsafe_allow_html=True
     )
 
-    m = leafmap.Map(draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-21.5, -45.75],zoom=20,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
@@ -166,8 +166,6 @@ def main():
         
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
-            center=[-21.5, -45.75],
-            zoom=20,
             location=[row['latitude'], row['longitude']],
             color='black',
             opacity=1,
