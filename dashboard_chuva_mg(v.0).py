@@ -43,21 +43,14 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
-# Dados simulados de precipitação para diferentes estações
-estacoes = {
-    "Estação 1": {"chuva_ultima_hora": 1.19, "chuva_24h": 36.88, "chuva_48h": 65.33},
-    "Estação 2": {"chuva_ultima_hora": 0.88, "chuva_24h": 24.55, "chuva_48h": 50.01},
-    "Estação 3": {"chuva_ultima_hora": 2.50, "chuva_24h": 40.00, "chuva_48h": 70.50},
-}
-
 # Seleção da estação
-estacao_selecionada = st.selectbox("Selecione a Estação", list(estacoes.keys()))
+estacao_selecionada = st.selectbox("Selecione a Estação", list(codigo_estacao.keys()))
 
 # Obter os valores de precipitação da estação selecionada
-dados_chuva = estacoes[estacao_selecionada]
-chuva_ultima_hora = dados_chuva["chuva_ultima_hora"]
-chuva_24h = dados_chuva["chuva_24h"]
-chuva_48h = dados_chuva["chuva_48h"]
+dados_chuva = df[estacao_selecionada]
+chuva_ultima_hora = dados_chuva[0]
+chuva_24h = dados_chuva[0]
+chuva_48h = dados_chuva[0]
 
 # Estado para controlar exibição do gráfico
 mostrar_grafico = st.session_state.get('mostrar_grafico', False)
@@ -201,18 +194,16 @@ def main():
             st.write(dados_estacao)
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
-
-    m.to_streamlit()
-    # Chamando a função para exibir o popup
-    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
-    
-   # Botões para exibir e fechar gráficos
-if not mostrar_grafico:
-    if st.button("Mostrar Gráfico"):
+    # Botões para exibir e fechar gráficos
+    if not mostrar_grafico:
+        if st.button("Mostrar Gráfico"):
         st.session_state['mostrar_grafico'] = True
 else:
     st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
     mostrar_graficos()
+    m.to_streamlit()
+    # Chamando a função para exibir o popup
+    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
     
     if st.button("Fechar Gráfico"):
         st.session_state['mostrar_grafico'] = False
