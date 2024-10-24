@@ -49,9 +49,6 @@ chuva_ultima_hora = dados_chuva[0]
 chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
 
-# Estado para controlar exibição do gráfico
-#mostrar_grafico = st.session_state.get('mostrar_grafico', False)
-
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
@@ -200,6 +197,9 @@ def main():
     else:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
         mostrar_graficos()
+    # Estado para controlar exibição do gráfico
+    mostrar_grafico = st.session_state.get('mostrar_grafico', False)
+    
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
