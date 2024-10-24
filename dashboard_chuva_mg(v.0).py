@@ -197,11 +197,11 @@ def main():
 
         # Adicionar botões na barra lateral
     if st.session_state['mostrar_grafico']:
-            st.sidebar.button("Mostrar Gráfico"):
+        if   st.sidebar.button("Mostrar Gráfico"):
                 st.session_state['mostrar_grafico'] = True
-    else:
-        if st.sidebar.button("Fechar Gráfico"):
-            st.session_state['mostrar_grafico'] = False
+        else:
+            st.sidebar.button("Fechar Gráfico"):
+                st.session_state['mostrar_grafico'] = False
     
     # Exibir o gráfico se o estado estiver ativo
     if st.session_state['mostrar_grafico']:
