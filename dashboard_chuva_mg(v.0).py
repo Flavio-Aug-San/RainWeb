@@ -219,7 +219,7 @@ def main():
     
         st.markdown("<div id='grafico'>", unsafe_allow_html=True)
         mostrar_graficos()
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=False)
     
     m.to_streamlit()
     # Chamando a função para exibir o popup
