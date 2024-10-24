@@ -45,7 +45,7 @@ token = content['token']
 def mostrar_graficos():
     st.markdown("### Gráfico de Precipitação")
     horas = ['Última Hora', '24 Horas', '48 Horas']
-    chuva_valores = [chuva_ultima_hora, chuva_24h, chuva_48h]
+    chuva_valores = [chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas]
     
     fig, ax = plt.subplots()
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
