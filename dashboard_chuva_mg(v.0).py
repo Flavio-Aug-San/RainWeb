@@ -197,7 +197,7 @@ def main():
     # Botões para exibir e fechar gráficos
     if not mostrar_grafico:
         if st.button("Mostrar Gráfico"):
-        st.session_state['mostrar_grafico'] = True
+            st.session_state['mostrar_grafico'] = True
     else:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
             mostrar_graficos()
