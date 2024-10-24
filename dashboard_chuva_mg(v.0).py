@@ -207,7 +207,6 @@ def main():
 
     # Exibir o gráfico se o estado estiver ativo
     if st.session_state['mostrar_grafico']:
-        st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
         mostrar_graficos()
             
     m.to_streamlit()
