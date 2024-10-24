@@ -51,6 +51,9 @@ chuva_48h = dados_chuva[0]
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
+# Estado para controlar exibição do gráfico
+mostrar_grafico = st.session_state.get('mostrar_grafico', False)
+
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
