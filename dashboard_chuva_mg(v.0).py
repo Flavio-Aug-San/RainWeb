@@ -42,6 +42,18 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
+def mostrar_graficos():
+    st.markdown("### Gráfico de Precipitação")
+    horas = ['Última Hora', '24 Horas', '48 Horas']
+    chuva_valores = [chuva_ultima_hora, chuva_24h, chuva_48h]
+    
+    fig, ax = plt.subplots()
+    ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
+    ax.set_ylabel('Precipitação (mm)')
+    ax.set_title('Precipitação nas últimas horas')
+    
+    st.pyplot(fig)
+
 # Função para exibir o pop-up no canto inferior direito
 def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
     st.markdown("""
