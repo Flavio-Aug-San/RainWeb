@@ -59,6 +59,8 @@ chuva_ultima_hora = dados_chuva["chuva_ultima_hora"]
 chuva_24h = dados_chuva["chuva_24h"]
 chuva_48h = dados_chuva["chuva_48h"]
 
+# Estado para controlar exibição do gráfico
+mostrar_grafico = st.session_state.get('mostrar_grafico', False)
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
@@ -142,8 +144,6 @@ def main():
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    #st.set_page_config(layout="wide")
-
     st.markdown(
     """
     <style>
@@ -154,7 +154,7 @@ def main():
     </style>
     """,
     unsafe_allow_html=True
-)
+    )
 
     m = leafmap.Map(center=[-21.5, -45.75], zoom=10, draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=False)
 
@@ -220,8 +220,16 @@ def main():
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
     
-    # Botão para mostrar gráficos
-    if st.button("Mostrar Gráficos", key="mostrar_graficos"):
-        mostrar_graficos()
+   # Botões para exibir e fechar gráficos
+if not mostrar_grafico:
+    if st.button("Mostrar Gráfico"):
+        st.session_state['mostrar_grafico'] = True
+else:
+    st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
+    mostrar_graficos()
+    
+    if st.button("Fechar Gráfico"):
+        st.session_state['mostrar_grafico'] = False
+        
 if __name__ == "__main__":
     main()
