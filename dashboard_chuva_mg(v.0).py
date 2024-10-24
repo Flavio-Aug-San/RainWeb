@@ -43,22 +43,6 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
-# Dados simulados de precipitação para diferentes estações
-estacoes = {
-    "Estação 1": {"chuva_ultima_hora": 1.19, "chuva_24h": 36.88, "chuva_48h": 65.33},
-    "Estação 2": {"chuva_ultima_hora": 0.88, "chuva_24h": 24.55, "chuva_48h": 50.01},
-    "Estação 3": {"chuva_ultima_hora": 2.50, "chuva_24h": 40.00, "chuva_48h": 70.50},
-}
-
-# Seleção da estação
-estacao_selecionada = st.selectbox("Selecione a Estação", list(estacoes.keys()))
-
-# Obter os valores de precipitação da estação selecionada
-dados_chuva = estacoes[estacao_selecionada]
-chuva_ultima_hora = dados_chuva["chuva_ultima_hora"]
-chuva_24h = dados_chuva["chuva_24h"]
-chuva_48h = dados_chuva["chuva_48h"]
-
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
@@ -163,6 +147,23 @@ def main():
         codigo_estacao = row['codEstacao']
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
 
+        # Dados simulados de precipitação para diferentes estações
+        estacoes = {
+            "Estação 1": {"chuva_ultima_hora": 1.19, "chuva_24h": 36.88, "chuva_48h": 65.33},
+            "Estação 2": {"chuva_ultima_hora": 0.88, "chuva_24h": 24.55, "chuva_48h": 50.01},
+            "Estação 3": {"chuva_ultima_hora": 2.50, "chuva_24h": 40.00, "chuva_48h": 70.50},
+        }
+        
+        # Seleção da estação
+        estacao_selecionada = st.selectbox("Selecione a Estação", list(estacoes.keys()))
+        
+        # Obter os valores de precipitação da estação selecionada
+        dados_chuva = estacoes[estacao_selecionada]
+        chuva_ultima_hora = dados_chuva["chuva_ultima_hora"]
+        chuva_24h = dados_chuva["chuva_24h"]
+        chuva_48h = dados_chuva["chuva_48h"]
+
+        
         # Adicionar marcador com valor
         folium.RegularPolygonMarker(
             center=[-21.5, -45.75],
@@ -218,6 +219,7 @@ def main():
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+    
     # Botão para mostrar gráficos
     if st.button("Mostrar Gráficos", key="mostrar_graficos"):
         mostrar_graficos()
