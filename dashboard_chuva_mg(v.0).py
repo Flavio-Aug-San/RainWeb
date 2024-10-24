@@ -200,7 +200,7 @@ def main():
             st.session_state['mostrar_grafico'] = True
     else:
         st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
-            mostrar_graficos()
+        mostrar_graficos()
         
     m.to_streamlit()
     # Chamando a função para exibir o popup
