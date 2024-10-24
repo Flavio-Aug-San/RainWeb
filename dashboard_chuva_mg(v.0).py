@@ -169,9 +169,6 @@ def main():
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
     
-    else:
-        st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
-        mostrar_graficos()
     if modo_selecao == 'Código':
         estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
         codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
@@ -203,7 +200,9 @@ def main():
             st.session_state['mostrar_grafico'] = True
     if st.sidebar.button("Fechar Gráfico"):
         st.session_state['mostrar_grafico'] = False
-        
+        else:
+            st.markdown(f"### Gráfico de Precipitação - {estacao_selecionada}")
+            mostrar_graficos()
     m.to_streamlit()
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
