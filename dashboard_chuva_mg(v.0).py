@@ -144,18 +144,6 @@ def main():
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    st.markdown(
-    """
-    <style>
-        .main .block-container {
-            padding: 0;
-            margin: 0;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
-
     m = leafmap.Map(center=[-21.5, -45.75],zoom=20,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
     # Adicionar marcadores das estações meteorológicas
@@ -172,7 +160,7 @@ def main():
             weight=2,
             fillColor='green',
             fillOpacity=1,
-            numberOfSides=2,
+            numberOfSides=4,
             rotation=45,
             radius=10,
             popup=f"{row['municipio']} (Código: {row['codEstacao']})"
