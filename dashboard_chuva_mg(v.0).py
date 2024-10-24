@@ -196,9 +196,9 @@ def main():
             st.warning("Nenhum dado encontrado para o período selecionado.")
 
         # Adicionar botões na barra lateral
-    if not st.session_state['mostrar_grafico']:
-        if st.sidebar.button("Mostrar Gráfico"):
-            st.session_state['mostrar_grafico'] = True
+    if st.session_state['mostrar_grafico']:
+        st.sidebar.button("Mostrar Gráfico"):
+        st.session_state['mostrar_grafico'] = True
     else:
         if st.sidebar.button("Fechar Gráfico"):
             st.session_state['mostrar_grafico'] = False
