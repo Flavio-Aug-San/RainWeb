@@ -128,12 +128,32 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
+
+    # Defina o layout da página como largo
+    st.set_page_config(layout="wide")
+
+    # CSS customizado para tornar o mapa tela cheia
+    st.markdown(
+        """
+        <style>
+            .main .block-container {
+                padding: 0;
+                margin: 0;
+            }
+            iframe {
+                height: 100vh !important;
+                width: 100vw !important;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    m = leafmap.Map(center=[-21.5, -45.75],zoom=6,height="400px", width="800px",draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
-
+    m = leafmap.Map(center=[-21.5, -45.75],zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
         
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
@@ -141,7 +161,6 @@ def main():
         codigo_estacao = row['codEstacao']
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
         
-    
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
     
