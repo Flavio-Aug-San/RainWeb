@@ -133,7 +133,7 @@ def main():
     data_final = hoje
 
     # Cria o mapa com a opção de tela cheia ativada
-    m = leafmap.Map(center=[-21.5, -45.75], zoom=20, width='100%', height='100 px', 
+    m = leafmap.Map(center=[-21.5, -45.75], zoom=20, 
                     draw_control=False, measure_control=False, 
                     fullscreen_control=True, attribution_control=True)
     
