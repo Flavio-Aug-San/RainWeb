@@ -131,7 +131,7 @@ def main():
     m = leafmap.Map(center=[-21.5, -45.75],draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
     
     # Defina o layout da página como largo
-    st.set_page_config(layout="wide")
+    #st.set_page_config(layout="wide")
     
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
@@ -204,4 +204,5 @@ def main():
     m.to_streamlit(width=1200,height=775)
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+    if __name__ == "__main__":
     main()
