@@ -128,7 +128,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
-    m = leafmap.Map(center=[-21.5, -45.75],draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
     
     # Defina o layout da página como largo
     #st.set_page_config(layout="wide")
@@ -201,7 +201,7 @@ def main():
         mostrar_graficos()
         
     # Mostrar o mapa em Streamlit
-    m.to_streamlit(width=1300,height=875)
+    m.to_streamlit(center=[-21.5, -45.75],width=1400,height=800)
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
 if __name__ == "__main__":
