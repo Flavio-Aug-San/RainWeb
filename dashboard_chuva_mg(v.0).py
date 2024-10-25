@@ -115,7 +115,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             # junta a tabela que foi lida com a anterior
             df = pd.concat([df, df0], ignore_index=True)
 
-m = leafmap.Map(center=[-21, -45],zoom = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
