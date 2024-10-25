@@ -128,7 +128,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 
 # Função principal do dashboard
 def main():
-    m = leafmap.Map(draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-21.5, -45.75],draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
     
     # Defina o layout da página como largo
     #st.set_page_config(layout="centered")
