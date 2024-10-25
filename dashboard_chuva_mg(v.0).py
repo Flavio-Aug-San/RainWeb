@@ -196,11 +196,12 @@ def main():
         
     # Adicionar botão na barra lateral para exibir gráfico
     mostrar = st.sidebar.button("Mostrar Gráfico")
-    close_button = st.button("X", key="close_graph")
+    
     # Lógica de controle do gráfico
     if mostrar:
         st.session_state['mostrar_grafico'] = True
-    
+        close_button = st.button("X", key="close_graph")
+        
     # Adicionar botão de fechar com "X"
     if st.session_state['mostrar_grafico']:
         if close_button:
