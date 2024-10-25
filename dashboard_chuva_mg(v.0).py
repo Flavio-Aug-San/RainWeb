@@ -132,7 +132,7 @@ def main():
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    m = leafmap.Map(center=[-21.5, -45.75],zoom=10,height="1000px",draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-21.5, -45.75],zoom=6,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
         
     # Adicionar marcadores das estações meteorológicas
