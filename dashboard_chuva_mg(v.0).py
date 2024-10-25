@@ -140,7 +140,7 @@ for i, row in gdf_mg.iterrows():
         fillOpacity=1,
         numberOfSides=4,
         rotation=45,
-        radius=5,
+        radius=10,
         popup=f"{row['municipio']} (Código: {row['codEstacao']})"
     ).add_to(m)
 
@@ -188,6 +188,6 @@ if mostrar:
     mostrar_graficos()
     
 # Mostrar o mapa em Streamlit
-m.to_streamlit(width=1500,height=775)
+m.to_streamlit(width=1300,height=775)
 # Chamando a função para exibir o popup
 exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
