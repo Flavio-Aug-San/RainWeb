@@ -140,7 +140,7 @@ for i, row in gdf_mg.iterrows():
         fillOpacity=1,
         numberOfSides=4,
         rotation=45,
-        radius=10,
+        radius=8,
         popup=f"{row['municipio']} (Código: {row['codEstacao']})"
     ).add_to(m)
 
