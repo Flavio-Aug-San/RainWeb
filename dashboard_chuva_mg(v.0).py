@@ -131,7 +131,28 @@ def main():
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
     data_final = hoje
-    m = leafmap.Map(center=[-21.5, -45.75], zoom=20, width='100%',height='100%',draw_control=False,measure_control=False,fullscreen_control=True,attribution_control=True)
+    # Insere o CSS para ajustar o layout do mapa
+    st.markdown("""
+    <style>
+        .full-screen-map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Cria o mapa sem especificar largura e altura, pois o CSS irá controlar isso
+    m = leafmap.Map(center=[-21.5, -45.75], zoom=7, draw_control=False, 
+                    measure_control=False, fullscreen_control=True, attribution_control=True)
+    
+    # Adiciona o mapa ao layout de tela cheia usando a classe CSS `full-screen-map`
+    st.write(f'<div class="full-screen-map">{m.to_html()}</div>', unsafe_allow_html=True)
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
         # Baixar dados da estação
