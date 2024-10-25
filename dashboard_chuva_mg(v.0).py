@@ -134,12 +134,12 @@ def main():
         """
         <style>
             .main .block-container {
-                padding: 1;
-                margin: 1;
+                padding: 0;
+                margin: 0;
             }
             iframe {
-                height: 90vh !important;
-                width: 90vw !important;
+                height: 99vh !important;
+                width: 99vw !important;
             }
         </style>
         """,
