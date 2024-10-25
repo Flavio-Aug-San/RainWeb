@@ -200,10 +200,10 @@ def main():
     # Lógica de controle do gráfico
     if mostrar:
         st.session_state['mostrar_grafico'] = True
-        close_button = st.button("X", key="close_graph")
         
     # Adicionar botão de fechar com "X"
     if st.session_state['mostrar_grafico']:
+        close_button = st.button("X", key="close_graph")
         if close_button:
             st.session_state['mostrar_grafico'] = False
     
