@@ -206,7 +206,8 @@ def main():
         close_button = st.button("X", key="close_graph")
         if close_button:
             st.session_state['mostrar_grafico'] = False
-    
+            st.session_state['close_button'] = False
+            
     # Exibição do gráfico
     if st.session_state['mostrar_grafico']:
         mostrar_graficos()
