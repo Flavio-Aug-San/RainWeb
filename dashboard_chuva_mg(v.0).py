@@ -51,10 +51,6 @@ chuva_48h = dados_chuva[0]
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
-# Estado para controlar exibição do gráfico
-if 'mostrar_grafico' not in st.session_state:
-    st.session_state['mostrar_grafico'] = False
-
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     horas = ['Última Hora', '24 Horas', '48 Horas']
@@ -194,21 +190,12 @@ def main():
         else:
             st.warning("Nenhum dado encontrado para o período selecionado.")
         
-    # Adicionar botão na barra lateral para exibir gráfico
-    if st.sidebar.button("Mostrar Gráfico"):
-        st.session_state['mostrar_grafico'] = not st.session_state['mostrar_grafico']
-    
-    # Exibição do gráfico
-    if st.session_state['mostrar_grafico']:
-        # Botão para fechar o gráfico com "X" no topo do gráfico
-        st.markdown("""
-        <div style="position: absolute; top: 0; right: 10px; cursor: pointer; font-size: 24px; color: red;" onclick="closeGraph()">❌</div>
-        """, unsafe_allow_html=True)
-        
+    # Checkbox na barra lateral para alternar exibição do gráfico
+    mostrar = st.sidebar.checkbox("Mostrar Gráfico de Precipitação")
+
+    # Exibir ou ocultar o gráfico conforme o estado do checkbox
+    if mostrar:
         mostrar_graficos()
-        
-        if st.sidebar.button("Fechar Gráfico"):
-            st.session_state['mostrar_grafico'] = False
         
     m.to_streamlit()
     # Chamando a função para exibir o popup
