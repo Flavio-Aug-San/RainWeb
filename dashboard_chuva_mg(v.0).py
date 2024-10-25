@@ -201,7 +201,7 @@ def main():
         mostrar_graficos()
         
     # Mostrar o mapa em Streamlit
-    m.to_streamlit(width=1350,height=900)
+    m.to_streamlit(width=1375,height=775)
     # Chamando a função para exibir o popup
     exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
 if __name__ == "__main__":
