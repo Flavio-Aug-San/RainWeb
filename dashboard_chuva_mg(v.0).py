@@ -131,7 +131,7 @@ def main():
     m = leafmap.Map(draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
     
     # Defina o layout da página como largo
-    st.set_page_config(layout="centered")
+    #st.set_page_config(layout="centered")
     
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
