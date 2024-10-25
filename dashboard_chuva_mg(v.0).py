@@ -210,9 +210,9 @@ def main():
             st.session_state['mostrar_grafico'] = False
             st.experimental_rerun()  # Recarrega a página para atualizar o estado imediatamente
 
-# Exibição do gráfico
-if st.session_state['mostrar_grafico']:
-    mostrar_graficos()
+    # Exibição do gráfico
+    if st.session_state['mostrar_grafico']:
+        mostrar_graficos()
         
     m.to_streamlit()
     # Chamando a função para exibir o popup
