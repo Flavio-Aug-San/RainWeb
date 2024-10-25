@@ -134,18 +134,6 @@ def main():
 
     m = leafmap.Map(center=[-21.5, -45.75],zoom=20,height="450px",draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
-    # Exibe o mapa com tamanho ajustável pelo CSS
-    st.markdown(
-        """
-        <style>
-        [data-testid="stMap"] > div {
-            width: 1000px !important;
-            height: 700px !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
         
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
@@ -153,26 +141,6 @@ def main():
         codigo_estacao = row['codEstacao']
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
         
-        # Adicionar marcador com valor
-        folium.RegularPolygonMarker(
-            location=[row['latitude'], row['longitude']],
-            color='black',
-            opacity=1,
-            weight=2,
-            fillColor='green',
-            fillOpacity=1,
-            numberOfSides=4,
-            rotation=45,
-            radius=10,
-            popup=f"{row['municipio']} (Código: {row['codEstacao']})"
-        ).add_to(m)
-
-    m.add_gdf(
-        mg_gdf, 
-        layer_name="Minas Gerais", 
-        style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
-        info_mode=None
-    )
     
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
