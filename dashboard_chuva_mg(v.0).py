@@ -114,19 +114,8 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         
             # junta a tabela que foi lida com a anterior
             df = pd.concat([df, df0], ignore_index=True)
-    
-        # insere a coluna data como DateTime no DataFrame
-        #df['datahora'] = pd.to_datetime(df['datahora'])
-        
-        # seta a coluna data com o index do dataframe
-        #df.set_index('datahora', inplace=True)
-    
-        # seleciona o acumulado de vhuva
-        #dfs = df[df['sensor'] == 'chuva']
-        
-    #soma_selecionada = df['valor'].sum()
 
-m = leafmap.Map(center=[-21, -45],zoom = 4,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+m = leafmap.Map(center=[-21, -45],zoom = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
@@ -146,12 +135,12 @@ for i, row in gdf_mg.iterrows():
         location=[row['latitude'], row['longitude']],
         color='black',
         opacity=1,
-        weight=2,
+        weight=1,
         fillColor='green',
         fillOpacity=1,
         numberOfSides=4,
         rotation=45,
-        radius=10,
+        radius=5,
         popup=f"{row['municipio']} (Código: {row['codEstacao']})"
     ).add_to(m)
 
@@ -199,6 +188,6 @@ if mostrar:
     mostrar_graficos()
     
 # Mostrar o mapa em Streamlit
-m.to_streamlit(width=1450,height=775)
+m.to_streamlit(width=1500,height=775)
 # Chamando a função para exibir o popup
 exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
