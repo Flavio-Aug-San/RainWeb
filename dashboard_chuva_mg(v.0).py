@@ -143,6 +143,26 @@ def main():
         codigo_estacao = row['codEstacao']
         dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
         
+        # Adicionar marcador com valor
+        folium.RegularPolygonMarker(
+            location=[row['latitude'], row['longitude']],
+            color='black',
+            opacity=1,
+            weight=2,
+            fillColor='green',
+            fillOpacity=1,
+            numberOfSides=4,
+            rotation=45,
+            radius=10,
+            popup=f"{row['municipio']} (Código: {row['codEstacao']})"
+        ).add_to(m)
+
+    m.add_gdf(
+        mg_gdf, 
+        layer_name="Minas Gerais", 
+        style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
+        info_mode=None
+    )
     st.sidebar.header("Filtros de Seleção")
     modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
     
