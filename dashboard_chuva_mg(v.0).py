@@ -130,15 +130,15 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 def main():
 
     # Defina o layout da página como largo
-    st.set_page_config(layout="wide")
+    #st.set_page_config(layout="wide")
 
     # CSS customizado para tornar o mapa tela cheia
     st.markdown(
         """
         <style>
             .main .block-container {
-                padding: 0;
-                margin: 0;
+                padding: 1;
+                margin: 1;
             }
             iframe {
                 height: 100vh !important;
