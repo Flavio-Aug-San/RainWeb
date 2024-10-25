@@ -191,7 +191,7 @@ def main():
             st.warning("Nenhum dado encontrado para o período selecionado.")
         
     # Checkbox na barra lateral para alternar exibição do gráfico
-    mostrar = st.sidebar.checkbox("Mostrar Gráfico de Precipitação")
+    mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 
     # Exibir ou ocultar o gráfico conforme o estado do checkbox
     if mostrar:
