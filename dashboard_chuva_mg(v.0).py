@@ -129,7 +129,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 # Função principal do dashboard
 def main():
     # Defina o layout da página como largo
-    st.set_page_config(layout="wide")
+    st.set_page_config(layout="centered")
     
     hoje = datetime.now()
     data_inicial = hoje.replace(day=1)
