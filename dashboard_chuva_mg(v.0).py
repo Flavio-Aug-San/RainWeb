@@ -129,9 +129,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
 # Função principal do dashboard
 def main():
 
-    # Defina o layout da página como largo
-    #st.set_page_config(layout="wide")
-
     # CSS customizado para tornar o mapa tela cheia
     st.markdown(
         """
@@ -141,8 +138,8 @@ def main():
                 margin: 1;
             }
             iframe {
-                height: 100vh !important;
-                width: 100vw !important;
+                height: 90vh !important;
+                width: 90vw !important;
             }
         </style>
         """,
