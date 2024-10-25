@@ -133,10 +133,6 @@ def main():
     st.markdown(
         """
         <style>
-            .main .block-container {
-                padding: 0;
-                margin: 0;
-            }
             iframe {
                 height: 99vh !important;
                 width: 99vw !important;
