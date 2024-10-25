@@ -126,83 +126,79 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         
     #soma_selecionada = df['valor'].sum()
 
-# Função principal do dashboard
-def main():
-    m = leafmap.Map(center=[-21, -45],zoom = 4,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
-    
-    # Defina o layout da página como largo
-    #st.set_page_config(layout="centered")
-    
-    hoje = datetime.now()
-    data_inicial = hoje.replace(day=1)
-    data_final = hoje
-        
-    # Adicionar marcadores das estações meteorológicas
-    for i, row in gdf_mg.iterrows():
-        # Baixar dados da estação
-        codigo_estacao = row['codEstacao']
-        dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
-        
-        # Adicionar marcador com valor
-        folium.RegularPolygonMarker(
-            location=[row['latitude'], row['longitude']],
-            color='black',
-            opacity=1,
-            weight=2,
-            fillColor='green',
-            fillOpacity=1,
-            numberOfSides=4,
-            rotation=45,
-            radius=10,
-            popup=f"{row['municipio']} (Código: {row['codEstacao']})"
-        ).add_to(m)
+m = leafmap.Map(center=[-21, -45],zoom = 4,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
-    m.add_gdf(
-        mg_gdf, 
-        layer_name="Minas Gerais", 
-        style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
-        info_mode=None
-    )
-    
-    st.sidebar.header("Filtros de Seleção")
-    modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
-    
-    if modo_selecao == 'Código':
-        estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
-        codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
+# Defina o layout da página como largo
+#st.set_page_config(layout="centered")
 
-    sigla_estado = 'MG'
-    tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+hoje = datetime.now()
+data_inicial = hoje.replace(day=1)
+data_final = hoje
+    
+# Adicionar marcadores das estações meteorológicas
+for i, row in gdf_mg.iterrows():
+    # Baixar dados da estação
+    codigo_estacao = row['codEstacao']
+    dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
+    
+    # Adicionar marcador com valor
+    folium.RegularPolygonMarker(
+        location=[row['latitude'], row['longitude']],
+        color='black',
+        opacity=1,
+        weight=2,
+        fillColor='green',
+        fillOpacity=1,
+        numberOfSides=4,
+        rotation=45,
+        radius=10,
+        popup=f"{row['municipio']} (Código: {row['codEstacao']})"
+    ).add_to(m)
 
-    if tipo_busca == 'Diária':
-        data_inicial = st.sidebar.date_input("Data", value=data_inicial)
+m.add_gdf(
+    mg_gdf, 
+    layer_name="Minas Gerais", 
+    style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
+    info_mode=None
+)
+
+st.sidebar.header("Filtros de Seleção")
+modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
+
+if modo_selecao == 'Código':
+    estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
+    codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
+
+sigla_estado = 'MG'
+tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+
+if tipo_busca == 'Diária':
+    data_inicial = st.sidebar.date_input("Data", value=data_inicial)
+else:
+    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
+    mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
+    data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
+    data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
+
+if st.sidebar.button("Baixar Dados"):
+    data_inicial_str = data_inicial.strftime('%Y%m%d')
+    data_final_str = data_final.strftime('%Y%m%d')
+    dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+
+    if not dados_estacao.empty:
+        st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+        st.write(dados_estacao)
     else:
-        ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
-        mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
-        data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
-        data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
+        st.warning("Nenhum dado encontrado para o período selecionado.")
+    
+# Checkbox na barra lateral para alternar exibição do gráfico
+mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 
-    if st.sidebar.button("Baixar Dados"):
-        data_inicial_str = data_inicial.strftime('%Y%m%d')
-        data_final_str = data_final.strftime('%Y%m%d')
-        dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
-
-        if not dados_estacao.empty:
-            st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-            st.write(dados_estacao)
-        else:
-            st.warning("Nenhum dado encontrado para o período selecionado.")
-        
-    # Checkbox na barra lateral para alternar exibição do gráfico
-    mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
-
-    # Exibir ou ocultar o gráfico conforme o estado do checkbox
-    if mostrar:
-        mostrar_graficos()
-        
-    # Mostrar o mapa em Streamlit
-    m.to_streamlit(width=1375,height=775)
-    # Chamando a função para exibir o popup
-    exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
-if __name__ == "__main__":
-    main()
+# Exibir ou ocultar o gráfico conforme o estado do checkbox
+if mostrar:
+    mostrar_graficos()
+    
+# Mostrar o mapa em Streamlit
+m.to_streamlit(width=1375,height=775)
+# Chamando a função para exibir o popup
+exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
