@@ -195,24 +195,20 @@ def main():
             st.warning("Nenhum dado encontrado para o período selecionado.")
         
     # Adicionar botão na barra lateral para exibir gráfico
-    mostrar = st.sidebar.button("Mostrar Gráfico")
+    if st.sidebar.button("Mostrar Gráfico"):
+        st.session_state['mostrar_grafico'] = not st.session_state['mostrar_grafico']
     
-    # Lógica de controle do gráfico
-    if mostrar:
-        st.session_state['mostrar_grafico'] = True
-    
-    # Lógica para o botão de fechar gráfico com "X"
-    if st.session_state['mostrar_grafico']:
-        close_button = st.button("❌ Fechar Gráfico", key="close_graph")
-    
-        # Atualização imediata do estado e recarga da página
-        if close_button:
-            st.session_state['mostrar_grafico'] = False
-            st.experimental_rerun()  # Recarrega a página para atualizar o estado imediatamente
-
     # Exibição do gráfico
     if st.session_state['mostrar_grafico']:
+        # Botão para fechar o gráfico com "X" no topo do gráfico
+        st.markdown("""
+        <div style="position: absolute; top: 0; right: 10px; cursor: pointer; font-size: 24px; color: red;" onclick="closeGraph()">❌</div>
+        """, unsafe_allow_html=True)
+        
         mostrar_graficos()
+        
+        if st.sidebar.button("Fechar Gráfico"):
+            st.session_state['mostrar_grafico'] = False
         
     m.to_streamlit()
     # Chamando a função para exibir o popup
