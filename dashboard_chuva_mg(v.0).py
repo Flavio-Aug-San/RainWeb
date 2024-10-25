@@ -133,7 +133,20 @@ def main():
     data_final = hoje
 
     m = leafmap.Map(center=[-21.5, -45.75],zoom=20, width=10,height=700,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
-    
+
+    # Exibe o mapa com tamanho ajustável pelo CSS
+    st.markdown(
+        """
+        <style>
+        [data-testid="stMap"] > div {
+            width: 1000px !important;
+            height: 700px !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+        
     # Adicionar marcadores das estações meteorológicas
     for i, row in gdf_mg.iterrows():
         # Baixar dados da estação
