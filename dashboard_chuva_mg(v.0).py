@@ -132,7 +132,7 @@ def main():
     data_inicial = hoje.replace(day=1)
     data_final = hoje
 
-    m = leafmap.Map(center=[-21.5, -45.75],zoom=20, width=10,height=700,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+    m = leafmap.Map(center=[-21.5, -45.75],zoom=20,height="450px",draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
     # Exibe o mapa com tamanho ajustável pelo CSS
     st.markdown(
