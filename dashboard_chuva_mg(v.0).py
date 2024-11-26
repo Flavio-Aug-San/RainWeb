@@ -158,9 +158,9 @@ def processar_estacoes(estacoes, ano, mes, dia):
             df = df.dropna(how='all')
 
             'Precip. Rate.' in df.columns:
-            df['Precip. Rate.'] = df['Precip. Rate.'].str.replace(' in', '').astype(float)
-            # Conversão de polegadas para mm
-            df['Precip. Rate.'] = df['Precip. Rate.'] * 25.4
+                df['Precip. Rate.'] = df['Precip. Rate.'].str.replace(' in', '').astype(float)
+                # Conversão de polegadas para mm
+                df['Precip. Rate.'] = df['Precip. Rate.'] * 25.4
 
             # Criar coluna 'Date' e 'DateTime'
             dia_formatado = f'{dia:02d}'
