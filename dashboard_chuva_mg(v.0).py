@@ -58,11 +58,11 @@ gdf = gpd.GeoDataFrame(geometry=gpd.points_from_xy(df['longitude'], df['latitude
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 
 # Recuperação do token
-token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
-login_payload = {'email': login, 'password': senha}
-response = requests.post(token_url, json=login_payload)
-content = response.json()
-token = content['token']
+#token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
+#login_payload = {'email': login, 'password': senha}
+#response = requests.post(token_url, json=login_payload)
+#content = response.json()
+#token = content['token']
 
 # Obter os valores de precipitação da estação selecionada
 dados_chuva = df['valorMedida']
