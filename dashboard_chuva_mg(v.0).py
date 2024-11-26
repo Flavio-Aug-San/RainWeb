@@ -157,21 +157,10 @@ def processar_estacoes(estacoes, ano, mes, dia):
             # Remover a linha que contém valores None em todas as colunas
             df = df.dropna(how='all')
 
-            # Processar colunas
-            if 'Time' in df.columns:
-                df['Time'] = pd.to_datetime(df['Time'], format='%I:%M %p').dt.strftime('%H:%M')
-
-            if 'Temperature' in df.columns:
-                df['Temperature'] = df['Temperature'].str.replace('°F', '').astype(float)
-                df['Temperature'] = (df['Temperature'] - 32) * 5.0 / 9.0
-
-            if 'Humidity' in df.columns:
-                df['Humidity'] = df['Humidity'].str.replace('%', '').astype(float)
-
-            if 'Precip. Rate.' in df.columns:
-                df['Precip. Rate.'] = df['Precip. Rate.'].str.replace(' in', '').astype(float)
-                # Conversão de polegadas para mm
-                df['Precip. Rate.'] = df['Precip. Rate.'] * 25.4
+            'Precip. Rate.' in df.columns:
+            df['Precip. Rate.'] = df['Precip. Rate.'].str.replace(' in', '').astype(float)
+            # Conversão de polegadas para mm
+            df['Precip. Rate.'] = df['Precip. Rate.'] * 25.4
 
             # Criar coluna 'Date' e 'DateTime'
             dia_formatado = f'{dia:02d}'
