@@ -34,7 +34,7 @@ data_formatada = f'{ano}{mes_formatado}{dia_formatado}'
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
-#csv_file_path = 'input;/estcaos_filtradas(1).csv'
+csv_file_path = 'input;/estcaos_filtradas(1).csv'
 
 # Login e senha do CEMADEN (previamente fornecidos)
 #login = 'augustoflaviobob@gmail.com'
@@ -51,8 +51,8 @@ lat = [-20.55,-21.53,-20.98,-21.79,-21.55,-22.26,-22.41,-22.18,-22.78,-22.11,-21
 lon = [-46.30,-46.65,-45.37,-46.57,-45.45,-44.45,-45.45,-45.81,-46.28,-45.06,-45.50,-44.85]
 
 # Carregar os dados das estações
-#df = pd.read_csv(csv_file_path)
-gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['longitude'], df['latitude']))
+df = pd.read_csv(csv_file_path)
+gdf = gpd.GeoDataFrame(geometry=gpd.points_from_xy(df['longitude'], df['latitude']))
 
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
