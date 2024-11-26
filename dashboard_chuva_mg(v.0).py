@@ -157,7 +157,7 @@ def processar_estacoes(estacoes, ano, mes, dia):
             # Remover a linha que contém valores None em todas as colunas
             df = df.dropna(how='all')
 
-            'Precip. Rate.' in df.columns:
+            if 'Precip. Rate.' in df.columns:
                 df['Precip. Rate.'] = df['Precip. Rate.'].str.replace(' in', '').astype(float)
                 # Conversão de polegadas para mm
                 df['Precip. Rate.'] = df['Precip. Rate.'] * 25.4
