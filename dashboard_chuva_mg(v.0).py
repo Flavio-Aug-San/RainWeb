@@ -70,7 +70,7 @@ chuva_ultima_hora = dados_chuva[0]
 chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
 
-estacao_selecionada =  gdf_mg['codEstacao'].unique()
+#estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
