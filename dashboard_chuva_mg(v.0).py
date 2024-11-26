@@ -51,7 +51,7 @@ lat = [-20.55,-21.53,-20.98,-21.79,-21.55,-22.26,-22.41,-22.18,-22.78,-22.11,-21
 lon = [-46.30,-46.65,-45.37,-46.57,-45.45,-44.45,-45.45,-45.81,-46.28,-45.06,-45.50,-44.85]
 
 # Carregar os dados das estações
-df = pd.read_csv(csv_file_path)
+#df = pd.read_csv(csv_file_path)
 gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['longitude'], df['latitude']))
 
 # Realizar o filtro espacial: apenas estações dentro de Minas Gerais
