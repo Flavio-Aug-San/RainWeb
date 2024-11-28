@@ -91,8 +91,7 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     </div>
     """, unsafe_allow_html=True)
 
-df_total = pd.DataFrame()  # DataFrame vazio para agregar os resultados
-
+df = 0
 #====================================================================#
 #               Download dos arquivos por mês
 #====================================================================#
