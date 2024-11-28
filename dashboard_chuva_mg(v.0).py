@@ -88,7 +88,6 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
 
 # Função para baixar os dados do último mês e retornar a soma
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
-    dfs = []
     for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
         ano_mes = ano_mes_dia.strftime('%Y%m')
         
@@ -189,7 +188,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.dataframe(dados_estacao)
+st.dataframe(df)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
