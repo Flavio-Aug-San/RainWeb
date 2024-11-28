@@ -1,9 +1,7 @@
 import streamlit as st
 import pandas as pd
-import io
 import geopandas as gpd
 import requests
-import calendar
 import numpy as np
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
@@ -29,7 +27,7 @@ senha = 'Flaviobr123!'
 mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
-codigo_estacao = ['314790701A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
+codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
 
 # Carregar os dados das estações
 df = pd.read_csv(csv_file_path)
@@ -98,18 +96,13 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-            
             ano_mes = ano_mes_dia.strftime('%Y%m')
-            
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
-            df_mes = r.text
-            
-            with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv') as arquivo:
-                for dado in dados:
-                    arquivo.write(str(dado))
-                    
+            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
+            df.append(df_mes)
+
         files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
 
         # leitura dos arquivos
@@ -127,28 +120,9 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
 
-# Data de hoje
-agora = datetime.now()
-
-# Dia, mês e ano de hoje
-dia_atual = agora.day
-mes_atual = agora.month
-ano_atual = agora.year
-
-# Calcula o mês e ano anteriores para a data inicial
-if mes_atual == 1:
-    mes_anterior = 12
-    ano_anterior = ano_atual - 1
-else:
-    mes_anterior = mes_atual - 1
-
-# Último dia do mês anterior
-ultimo_dia_mes_anterior = calendar.monthrange(ano_atual, mes_anterior)[1]
-
-# Formata as datas
-diai = '01'
-data_inicial = f'{ano_atual:02d}{mes_anterior:02d}{diai}'
-data_final = f'{ano_atual:02d}{mes_atual:02d}{dia_atual:02d}'
+hoje = datetime.now()
+data_inicial = hoje.replace(day=1)
+data_final = hoje
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
@@ -190,7 +164,7 @@ tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
 if tipo_busca == 'Diária':
     data_inicial = st.sidebar.date_input("Data", value=data_inicial)
 else:
-    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2015, datetime.now().year + 1))
+    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
     data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
     data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
