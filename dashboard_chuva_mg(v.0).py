@@ -101,7 +101,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
-            df_mes = pd.read_csv(pd.compat(r.text))
+            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
             df.append(df_mes)
 
         files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
@@ -140,8 +140,8 @@ else:
 # Primeira e última datas do mês anterior
 diai = '01'
 diaf = str(calendar.monthrange(ano_anterior, mes_anterior)[1])
-data_inicial = f"{ano_anterior}{mes_anterior:02d}{diai}"
-data_final = f"{ano_anterior}{mes_atual:02d}{dia_atual}"
+data_inicial = f"{ano_atual}{mes_anterior:02d}{diai}"
+data_final = f"{ano_atual}{mes_atual:02d}{diaf}"
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
