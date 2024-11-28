@@ -84,15 +84,15 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     # seta a coluna data com o index do dataframe
     df.set_index('datahora', inplace=True)
 
-    df1 = df['valor'].resample('H').sum()
+    df2 = df['valor'].resample('H').sum()
     
-    dfuma = df1[-1]
+    dfuma = df2[-1]
     
     # Filtra e soma os valores das últimas 24 horas
-    soma_ultimas_24h = df1[df.index >= pd.Timestamp.now() - pd.Timedelta('1D')]['valor'].sum()
+    soma_ultimas_24h = df2[df.index >= pd.Timestamp.now() - pd.Timedelta('1D')]['valor'].sum()
 
     # Filtra e soma os valores das últimas 48 horas
-    soma_ultimas_48h = df1[df.index >= pd.Timestamp.now() - pd.Timedelta('2D')]['valor'].sum()
+    soma_ultimas_48h = df2[df.index >= pd.Timestamp.now() - pd.Timedelta('2D')]['valor'].sum()
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
