@@ -56,7 +56,7 @@ anof, mesf = '2024', '11'
 diai = '01'
 diaf = str(calendar.monthrange(int(anof), int(mesf))[1])
 data_inicial, data_final = f'{anoi}{mesi}{diai}', f'{anof}{mesf}{diaf}'
-data_inicial = data_inicial.datetime
+data_inicial = pd.to_datetime(data_inicial)
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
