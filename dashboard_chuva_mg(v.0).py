@@ -84,6 +84,10 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     # seta a coluna data com o index do dataframe
     df.set_index('datahora', inplace=True)
 
+    dfuma = df['valor'][-1]
+    df24 = df["valor"].rolling("24h").sum()
+    df48 = df["valor"].rolling("48h").sum()
+
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     horas = ['Última Hora', '24 Horas', '48 Horas']
@@ -118,9 +122,9 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     st.markdown(f"""
     <div class="popup">
         <h4>Informações de Chuva</h4>
-        <p>Chuva na última hora: {chuva_ultima_hora} mm</p>
-        <p>Chuva nas últimas 24 horas: {chuva_ultimas_24_horas} mm</p>
-        <p>Chuva nas últimas 48 horas: {chuva_ultimas_48_horas} mm</p>
+        <p>Chuva na última hora: {dfuma} mm</p>
+        <p>Chuva nas últimas 24 horas: {df24} mm</p>
+        <p>Chuva nas últimas 48 horas: {df48} mm</p>
     </div>
     """, unsafe_allow_html=True)
     
