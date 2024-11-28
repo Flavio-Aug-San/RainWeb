@@ -140,8 +140,8 @@ else:
 # Primeira e última datas do mês anterior
 diai = '01'
 diaf = str(calendar.monthrange(ano_anterior, mes_anterior)[1])
-data_inicial = {ano_anterior}{mes_atual}{diai}
-data_final = {ano_anterior}{mes_anterior}{diaf}
+data_inicial = '{ano_anterior}{mes_atual}{diai}'
+data_final = '{ano_anterior}{mes_anterior}{diaf}'
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
