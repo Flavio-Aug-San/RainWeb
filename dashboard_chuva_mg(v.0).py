@@ -98,12 +98,15 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+            
             ano_mes = ano_mes_dia.strftime('%Y%m')
+            
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
             df_mes = r.text
-            with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
+            
+            with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv') as arquivo:
                 for dado in dados:
                     arquivo.write(str(dado))
                     
