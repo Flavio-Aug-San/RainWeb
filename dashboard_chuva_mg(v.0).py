@@ -129,7 +129,7 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
                 print(f"Falha na solicitação para a estação {estacao}, código HTTP: {r.status_code}")
     
     # Retorna os dados concatenados
-    return pd.concat(dfs) if dfs else None
+    return pd.concat(dfs) 
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
@@ -203,7 +203,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.dataframe(dfs)
+st.dataframe(dados_estacao)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
