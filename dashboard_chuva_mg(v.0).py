@@ -121,9 +121,6 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
 
-# Obtém a data e hora atual
-agora = datetime.now()
-
 # Data de hoje
 hoje = datetime.now()
 
@@ -144,7 +141,7 @@ else:
 diai = '01'
 diaf = str(calendar.monthrange(ano_anterior, mes_anterior)[1])
 data_inicial = f'{ano_anterior}{mes_anterior:02d}{diai}'
-data_final = f'{ano_anterior}{mes_anterior:02d}{diaf}'
+data_final = f'{ano_anterior}{mes_atual:02d}{diaf}'
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
