@@ -88,38 +88,36 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
 
 # Função para baixar os dados do último mês e retornar a soma
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
-    dfs = []
-    for estacao in codigo_estacao: 
-        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-            ano_mes = ano_mes_dia.strftime('%Y%m')
-            
-            sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
-            params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=estacao)
-            r = requests.get(sws_url, params=params, headers={'token': token})
-            
-            dados = r.text  # Armazena a resposta como string
-            
-            # Remover a linha de comentário
-            linhas = dados.split("\n")
-            dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+    for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+        ano_mes = ano_mes_dia.strftime('%Y%m')
         
+        sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
+        params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=estacao)
+        r = requests.get(sws_url, params=params, headers={'token': token})
         
-            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-            
-            # Seleciona o acumulado de chuva
-            df = df[df['sensor'] == 'chuva']
-            
-            # Insere a coluna data como DateTime no DataFrame
-            df['datahora'] = pd.to_datetime(df['datahora'])
-            
-            # Seta a coluna data com o índice do DataFrame
-            df.set_index('datahora', inplace=True)
-            
-            # Agrupar por hora e somar os valores
-            df = df.resample('H')
-            
-            # Adiciona ao acumulador
-            dfs.append(df)
+        dados = r.text  # Armazena a resposta como string
+        
+        # Remover a linha de comentário
+        linhas = dados.split("\n")
+        dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+    
+    
+        df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+        
+        # Seleciona o acumulado de chuva
+        df = df[df['sensor'] == 'chuva']
+        
+        # Insere a coluna data como DateTime no DataFrame
+        df['datahora'] = pd.to_datetime(df['datahora'])
+        
+        # Seta a coluna data com o índice do DataFrame
+        df.set_index('datahora', inplace=True)
+        
+        # Agrupar por hora e somar os valores
+        df = df.resample('H')
+        
+        # Adiciona ao acumulador
+        dfs.append(df)
     
     # Retorna os dados concatenados
     return dfs
@@ -137,7 +135,7 @@ data_final = hoje
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
     codigo_estacao = row['codEstacao']
-    dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', 'MG', data_inicial, data_final, login, senha)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -181,7 +179,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', sigla_estado, data_inicial, data_final, login, senha)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
