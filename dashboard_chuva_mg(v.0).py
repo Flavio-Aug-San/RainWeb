@@ -136,15 +136,14 @@ if mes_atual == 1:
     ano_anterior = ano_atual - 1
 else:
     mes_anterior = mes_atual - 1
-    ano_anterior = ano_atual
 
 # Último dia do mês anterior
 ultimo_dia_mes_anterior = calendar.monthrange(ano_anterior, mes_anterior)[1]
 
 # Formata as datas
 diai = '01'
-data_inicial = f'{ano_anterior}{mes_anterior:02d}{diai}'
-data_final = f'{ano_atual}{mes_atual:02d}{dia_atual:02d}'
+data_inicial = f'{ano_atual:02d}{mes_anterior:02d}{diai}'
+data_final = f'{ano_atual:02d}{mes_atual:02d}{dia_atual:02d}'
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
