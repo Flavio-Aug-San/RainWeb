@@ -188,7 +188,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.dataframe(df)
+st.dataframe(dados_estacao)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
