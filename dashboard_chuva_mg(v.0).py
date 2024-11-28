@@ -9,6 +9,7 @@ import folium
 import glob
 import matplotlib.pyplot as plt
 from folium.plugins import MarkerCluster
+import calendar
 
 # Simulação de dados (soma de chuva em mm) - substitua por seus dados reais
 chuva_ultima_hora = np.random.uniform(0, 5)  # Exemplo de valor entre 0 e 5mm
