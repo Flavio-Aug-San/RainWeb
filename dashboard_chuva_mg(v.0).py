@@ -165,7 +165,7 @@ sigla_estado = 'MG'
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
 
 if tipo_busca == 'Diária':
-    data_inicial = st.sidebar("Data", value=data_inicial)
+    data_inicial = st.sidebar.date_input("Data", value=data_inicial)
 else:
     ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
