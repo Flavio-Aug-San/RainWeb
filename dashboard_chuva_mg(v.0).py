@@ -44,6 +44,10 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
+hoje = datetime.now()
+data_inicial = hoje.replace(day=1)
+data_final = hoje
+
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
 # Função para exibir gráficos de precipitação
@@ -114,10 +118,6 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
-
-hoje = datetime.now()
-data_inicial = hoje.replace(day=1)
-data_final = hoje
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
