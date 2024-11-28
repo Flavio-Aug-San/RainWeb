@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import io
 import geopandas as gpd
 import requests
 import numpy as np
