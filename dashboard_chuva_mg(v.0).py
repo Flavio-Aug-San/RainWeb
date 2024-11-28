@@ -44,11 +44,6 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
-# Obter os valores de precipitação da estação selecionada
-chuva_ultima_hora = dados_chuva[0]
-chuva_24h = dados_chuva[0]
-chuva_48h = dados_chuva[0]
-
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
 # Função para exibir gráficos de precipitação
@@ -118,6 +113,9 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             
             # seta a coluna data com o index do dataframe
             df.set_index('datahora', inplace=True)
+
+            # Agrupar por hora e somar os valores
+            df = df.resample('H').mean()
             
             # mostra os dados
             df
