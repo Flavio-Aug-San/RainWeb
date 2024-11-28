@@ -91,36 +91,45 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-            
             ano_mes = ano_mes_dia.strftime('%Y%m')
             
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
-            params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
+            params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
             
-            # Remover a linha de comentário
-            linhas = dados.split("\n")
-            dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
-            
-            # Transformar em DataFrame
-            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-
-            # seleciona o acumulado de vhuva
-            df = df[ df['sensor'] == 'chuva' ]
-            
-            # insere a coluna data como DateTime no DataFrame
-            df['datahora'] = pd.to_datetime(df['datahora'])
-            
-            # seta a coluna data com o index do dataframe
-            df.set_index('datahora', inplace=True)
-
-            # Agrupar por hora e somar os valores
-            df = df.resample('H').mean()
-            
-            # mostra os dados
-            df
-        
-    return dfs
+            if r.status_code == 200:
+                dados = r.text  # Armazena a resposta como string
+                
+                # Remover a linha de comentário
+                linhas = dados.split("\n")
+                dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+                
+                # Transformar em DataFrame
+                try:
+                    df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+                    
+                    # Seleciona o acumulado de chuva
+                    df = df[df['sensor'] == 'chuva']
+                    
+                    # Insere a coluna data como DateTime no DataFrame
+                    df['datahora'] = pd.to_datetime(df['datahora'])
+                    
+                    # Seta a coluna data com o índice do DataFrame
+                    df.set_index('datahora', inplace=True)
+                    
+                    # Agrupar por hora e somar os valores
+                    df = df.resample('H').mean()
+                    
+                    # Adiciona ao acumulador
+                    dfs.append(df)
+                
+                except Exception as e:
+                    print(f"Erro ao processar dados para a estação {estacao}: {e}")
+            else:
+                print(f"Falha na solicitação para a estação {estacao}, código HTTP: {r.status_code}")
+    
+    # Retorna os dados concatenados
+    return pd.concat(dfs) if dfs else None
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
