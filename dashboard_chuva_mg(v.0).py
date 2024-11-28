@@ -88,11 +88,13 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
 
 # Função para baixar os dados do último mês e retornar a soma
 def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
+    df_total = pd.DataFrame()  # DataFrame vazio para agregar os resultados
+    
     for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
         ano_mes = ano_mes_dia.strftime('%Y%m')
         
         sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
-        params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=estacao)
+        params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
         r = requests.get(sws_url, params=params, headers={'token': token})
         
         dados = r.text  # Armazena a resposta como string
@@ -100,21 +102,19 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         # Remover a linha de comentário
         linhas = dados.split("\n")
         dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+        
+        # Processar os dados recebidos
+        try:
+            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+            df = df[df['sensor'] == 'chuva']  # Filtrar apenas dados de chuva
+            df['datahora'] = pd.to_datetime(df['datahora'])
+            df.set_index('datahora', inplace=True)
+            df = df.resample('H').sum()  # Agregar por hora
+            df_total = pd.concat([df_total, df])  # Adicionar ao DataFrame total
+        except Exception as e:
+            print(f"Erro ao processar dados para {ano_mes}: {e}")
     
-    
-        df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-        
-        # Seleciona o acumulado de chuva
-        df = df[df['sensor'] == 'chuva']
-        
-        # Insere a coluna data como DateTime no DataFrame
-        df['datahora'] = pd.to_datetime(df['datahora'])
-        
-        # Seta a coluna data com o índice do DataFrame
-        df.set_index('datahora', inplace=True)
-        
-        # Agrupar por hora e somar os valores
-        df = df.resample('H')
+    return df_total
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
