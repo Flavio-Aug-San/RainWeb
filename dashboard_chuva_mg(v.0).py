@@ -28,7 +28,8 @@ senha = 'Flaviobr123!'
 mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
-codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
+#codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
+codigo_estacao = '313240401A'
 
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
@@ -92,25 +93,38 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
 
 df_total = pd.DataFrame()  # DataFrame vazio para agregar os resultados
 
+#====================================================================#
+#               Download dos arquivos por mês
+#====================================================================#
 for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-    ano_mes = ano_mes_dia.strftime('%Y%m')
-    
-    sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
-    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo='313240401A')
+
+    #------------------------------------------#
+    #          Extrai o ano e mês
+    #------------------------------------------#
+    ano_mes = ano_mes_dia.strftime('%Y%m') #'202401'
+
+    #------------------------------------------#
+    #    Requisição de dados usando Python
+    #------------------------------------------#
+    sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
+    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao) #data = '202404' e #codigo = '431490201A'
     r = requests.get(sws_url, params=params, headers={'token': token})
-    
-    dados = r.text  # Armazena a resposta como string
-    
+    dados = r.text
     # Remover a linha de comentário
     linhas = dados.split("\n")
     dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
-    
+
+    # Transformar em DataFrame
     df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-    df = df[df['sensor'] == 'chuva']  # Filtrar apenas dados de chuva
+
+    # seleciona o acumulado de vhuva
+    df = df[ df['sensor'] == 'chuva' ]
+
+    # insere a coluna data como DateTime no DataFrame
     df['datahora'] = pd.to_datetime(df['datahora'])
+
+    # seta a coluna data com o index do dataframe
     df.set_index('datahora', inplace=True)
-    df = df.resample('H').sum()  # Agregar por hora
-    df_total = pd.concat([df_total, df])  # Adicionar ao DataFrame total
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
@@ -179,7 +193,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.dataframe(df_total)
+st.dataframe(df)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
