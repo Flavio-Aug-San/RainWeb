@@ -91,20 +91,10 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     </div>
     """, unsafe_allow_html=True)
 
-df = 0
-#====================================================================#
-#               Download dos arquivos por mês
-#====================================================================#
 for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
 
-    #------------------------------------------#
-    #          Extrai o ano e mês
-    #------------------------------------------#
     ano_mes = ano_mes_dia.strftime('%Y%m') #'202401'
 
-    #------------------------------------------#
-    #    Requisição de dados usando Python
-    #------------------------------------------#
     sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
     params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao) #data = '202404' e #codigo = '431490201A'
     r = requests.get(sws_url, params=params, headers={'token': token})
