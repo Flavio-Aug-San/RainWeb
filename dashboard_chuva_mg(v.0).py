@@ -112,8 +112,6 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     df = df.resample('H').sum()  # Agregar por hora
     df_total = pd.concat([df_total, df])  # Adicionar ao DataFrame total
     
-    
-
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
 # Defina o layout da página como largo
@@ -181,7 +179,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.dataframe(dados_estacao)
+st.dataframe(df_total)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
