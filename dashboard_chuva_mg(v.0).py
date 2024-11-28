@@ -99,6 +99,26 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             ano_mes = ano_mes_dia.strftime('%Y%m')
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
+            r = requests.get(sws_url, params=params, headers={'token': token})
+            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
+            df.append(df_mes)
+
+        files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
+
+        # leitura dos arquivos
+        df = pd.DataFrame()
+        for file in files:
+
+            # leitura da tabela
+            df0 = pd.read_csv(file, delimiter=';', skiprows=1)
+
+            # junta a tabela que foi lida com a anterior
+            df = pd.concat([df, df0], ignore_index=True)
+
+m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
+
+# Defina o layout da página como largo
+st.set_page_config(layout="wide")
 
 hoje = datetime.now()
 data_inicial = hoje
@@ -112,6 +132,38 @@ for i, row in gdf_mg.iterrows():
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
+        location=[row['latitude'], row['longitude']],
+        color='black',
+        opacity=1,
+        weight=1,
+        fillColor='green',
+        fillOpacity=1,
+        numberOfSides=4,
+        rotation=45,
+        radius=8,
+        popup=f"{row['municipio']} (Código: {row['codEstacao']})"
+    ).add_to(m)
+
+m.add_gdf(
+    mg_gdf, 
+    layer_name="Minas Gerais", 
+    style={"color": "black", "weight": 1, "fillOpacity": 0, "interactive": False},
+    info_mode=None
+)
+
+st.sidebar.header("Filtros de Seleção")
+modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
+
+if modo_selecao == 'Código':
+    estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
+    codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
+
+sigla_estado = 'MG'
+tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+
+if tipo_busca == 'Diária':
+    data_inicial = st.sidebar.date_input("Data", value=data_inicial)
+else:
     ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2015, datetime.now().year + 1))
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
     data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
