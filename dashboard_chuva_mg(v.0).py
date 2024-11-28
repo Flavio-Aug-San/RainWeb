@@ -44,7 +44,7 @@ content = response.json()
 token = content['token']
 
 # Obter os valores de precipitação da estação selecionada
-dados_chuva = df['valorMedida']
+dados_chuva = df1['valorMedida']
 chuva_ultima_hora = dados_chuva[0]
 chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
