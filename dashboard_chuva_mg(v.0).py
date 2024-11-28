@@ -92,7 +92,7 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     """, unsafe_allow_html=True)
 
 # Função para baixar os dados do último mês e retornar a soma
-def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
+def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha, token):
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
@@ -100,22 +100,18 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
-            df_mes = pd.read_csv(pd.compat.StringIO(r.text))
-            df.append(df_mes)
-
-        files = sorted(glob.glob(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}*.csv'))
-
-        # leitura dos arquivos
-        df = pd.DataFrame()
-        for file in files:
-
-            # leitura da tabela
-            df0 = pd.read_csv(file, delimiter=';', skiprows=1)
-
-            # junta a tabela que foi lida com a anterior
-            df = pd.concat([df, df0], ignore_index=True)
-
-    return df
+            
+            # Criar o nome do arquivo para salvar
+            nome_arquivo = f'dados_{estacao}_{ano_mes}.csv'
+            caminho_arquivo = os.path.join('input', nome_arquivo)
+            
+            # Salvar o conteúdo da resposta em um arquivo CSV
+            with open(caminho_arquivo, 'w') as f:
+                f.write(r.text)
+            
+            # Ler o arquivo CSV e adicionar à lista de DataFrames
+            df_mes = pd.read_csv(caminho_arquivo)
+            dfs.append(df_mes)
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
@@ -189,7 +185,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-#st.dataframe(df_mes)
+#st.dataframe(dfs)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
