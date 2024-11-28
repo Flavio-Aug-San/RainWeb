@@ -1,5 +1,4 @@
 import streamlit as st
-import calendar
 import pandas as pd
 import geopandas as gpd
 import requests
@@ -121,27 +120,9 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
 
-# Data de hoje
 hoje = datetime.now()
-
-# Extrai o dia, mês e ano de hoje
-dia_atual = hoje.day
-mes_atual = hoje.month
-ano_atual = hoje.year
-
-# Lógica para o mês anterior
-if mes_atual == 1:  # Caso seja janeiro
-    mes_anterior = 12
-    ano_anterior = ano_atual - 1
-else:
-    mes_anterior = mes_atual - 1
-    ano_anterior = ano_atual
-
-# Primeira e última datas do mês anterior
-diai = '01'
-diaf = str(calendar.monthrange(ano_anterior, mes_anterior)[1])
-data_inicial = f"{ano_atual}{mes_anterior:02d}{diaf}"
-data_final = f"{ano_atual}{mes_atual:02d}{dia_atual}"
+data_inicial = hoje.replace(day=1)
+data_final = hoje
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
