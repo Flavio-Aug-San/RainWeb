@@ -29,7 +29,7 @@ senha = 'Flaviobr123!'
 mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
-codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
+codigo_estacao = ['314790701A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
 
 # Carregar os dados das estações
 df = pd.read_csv(csv_file_path)
@@ -103,7 +103,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
             df_mes = r.text
-
             with open(f'/content/estacao_CEMADEN_{sigla_estado}_{codigo_estacao}_{ano_mes}.csv','w') as arquivo:
                 for dado in dados:
                     arquivo.write(str(dado))
