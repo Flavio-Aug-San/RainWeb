@@ -116,9 +116,6 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
         
         # Agrupar por hora e somar os valores
         df = df.resample('H')
-    
-    # Retorna os dados concatenados
-    return dfs
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
