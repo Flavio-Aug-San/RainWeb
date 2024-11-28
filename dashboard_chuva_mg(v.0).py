@@ -129,7 +129,7 @@ data_final = hoje
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
     codigo_estacao = row['codEstacao']
-    dados_estacao= baixar_dados_estacao('313240401A', 'MG', data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', 'MG', '20241101', '20241128', login, senha)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -173,7 +173,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= baixar_dados_estacao('313240401A', sigla_estado, data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', 'MG', '20241101', '20241128', login, senha)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
