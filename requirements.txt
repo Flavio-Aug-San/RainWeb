@@ -10,4 +10,3 @@ datetime
 folium
 numpy
 matplotlib
-calendar
