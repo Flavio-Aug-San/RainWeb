@@ -92,10 +92,10 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     """, unsafe_allow_html=True)
 
 # Função para baixar os dados do último mês e retornar a soma
-def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
+def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, login, senha):
     dfs = []
     for estacao in codigo_estacao: 
-        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+        for ano_mes_dia in pd.date_range(data_inicial, freq='1M'):
             ano_mes = ano_mes_dia.strftime('%Y%m')
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
@@ -122,13 +122,12 @@ st.set_page_config(layout="wide")
 
 hoje = datetime.now()
 data_inicial = hoje
-data_final = hoje.replace(day=1)
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
     codigo_estacao = row['codEstacao']
-    dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, login, senha)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -167,12 +166,10 @@ else:
     ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2015, datetime.now().year + 1))
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
     data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
-    data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
 
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
-    data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, login, senha)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
