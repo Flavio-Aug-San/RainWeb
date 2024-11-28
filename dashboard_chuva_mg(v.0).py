@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
 import folium
 import glob
+from io import StringIO
 import matplotlib.pyplot as plt
 from folium.plugins import MarkerCluster
 
@@ -44,7 +45,6 @@ content = response.json()
 token = content['token']
 
 # Obter os valores de precipitação da estação selecionada
-dados_chuva = df1['valorMedida']
 chuva_ultima_hora = dados_chuva[0]
 chuva_24h = dados_chuva[0]
 chuva_48h = dados_chuva[0]
@@ -96,23 +96,32 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+            
             ano_mes = ano_mes_dia.strftime('%Y%m')
+            
             sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/df_pcd'
             params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)
             r = requests.get(sws_url, params=params, headers={'token': token})
             
-            # Criar o nome do arquivo para salvar
-            nome_arquivo = f'dados_{estacao}_{ano_mes}.csv'
-            caminho_arquivo = os.path.join('input', nome_arquivo)
+            # Remover a linha de comentário
+            linhas = dados.split("\n")
+            dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
             
-            # Salvar o conteúdo da resposta em um arquivo CSV
-            with open(caminho_arquivo, 'w') as f:
-                f.write(r.text)
-            
-            # Ler o arquivo CSV e adicionar à lista de DataFrames
-            df_mes = pd.read_csv(caminho_arquivo)
-            dfs.append(df_mes)
+            # Transformar em DataFrame
+            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
+            # seleciona o acumulado de vhuva
+            df = df[ df['sensor'] == 'chuva' ]
+            
+            # insere a coluna data como DateTime no DataFrame
+            df['datahora'] = pd.to_datetime(df['datahora'])
+            
+            # seta a coluna data com o index do dataframe
+            df.set_index('datahora', inplace=True)
+            
+            # mostra os dados
+            df
+        
     return dfs
 
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
@@ -128,7 +137,7 @@ data_final = hoje
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
     codigo_estacao = row['codEstacao']
-    dados_estacao= baixar_dados_estacao(codigo_estacao, 'MG', data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', 'MG', data_inicial, data_final, login, senha)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -172,7 +181,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha)
+    dados_estacao= baixar_dados_estacao('313240401A', sigla_estado, data_inicial, data_final, login, senha)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
