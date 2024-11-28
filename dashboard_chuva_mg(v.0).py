@@ -92,7 +92,7 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
     """, unsafe_allow_html=True)
 
 # Função para baixar os dados do último mês e retornar a soma
-def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha, token):
+def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final, login, senha):
     dfs = []
     for estacao in codigo_estacao: 
         for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
