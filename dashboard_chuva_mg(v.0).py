@@ -51,6 +51,30 @@ data_final = hoje
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
+for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+
+    ano_mes = ano_mes_dia.strftime('%Y%m') #'202401'
+
+    sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
+    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao) #data = '202404' e #codigo = '431490201A'
+    r = requests.get(sws_url, params=params, headers={'token': token})
+    dados = r.text
+    # Remover a linha de comentário
+    linhas = dados.split("\n")
+    dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+
+    # Transformar em DataFrame
+    df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+
+    # seleciona o acumulado de vhuva
+    df = df[ df['sensor'] == 'chuva' ]
+
+    # insere a coluna data como DateTime no DataFrame
+    df['datahora'] = pd.to_datetime(df['datahora'])
+
+    # seta a coluna data com o index do dataframe
+    df.set_index('datahora', inplace=True)
+
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     horas = ['Última Hora', '24 Horas', '48 Horas']
@@ -90,30 +114,6 @@ def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_hor
         <p>Chuva nas últimas 48 horas: {chuva_ultimas_48_horas} mm</p>
     </div>
     """, unsafe_allow_html=True)
-
-for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
-
-    ano_mes = ano_mes_dia.strftime('%Y%m') #'202401'
-
-    sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
-    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao) #data = '202404' e #codigo = '431490201A'
-    r = requests.get(sws_url, params=params, headers={'token': token})
-    dados = r.text
-    # Remover a linha de comentário
-    linhas = dados.split("\n")
-    dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
-
-    # Transformar em DataFrame
-    df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-
-    # seleciona o acumulado de vhuva
-    df = df[ df['sensor'] == 'chuva' ]
-
-    # insere a coluna data como DateTime no DataFrame
-    df['datahora'] = pd.to_datetime(df['datahora'])
-
-    # seta a coluna data com o index do dataframe
-    df.set_index('datahora', inplace=True)
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
