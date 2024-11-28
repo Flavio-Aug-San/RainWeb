@@ -138,7 +138,7 @@ else:
     mes_anterior = mes_atual - 1
 
 # Último dia do mês anterior
-ultimo_dia_mes_anterior = calendar.monthrange(ano_anterior, mes_anterior)[1]
+ultimo_dia_mes_anterior = calendar.monthrange(ano_atual, mes_anterior)[1]
 
 # Formata as datas
 diai = '01'
