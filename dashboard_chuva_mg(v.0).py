@@ -103,30 +103,29 @@ def baixar_dados_estacao(codigo_estacao, sigla_estado, data_inicial, data_final,
                 # Remover a linha de comentário
                 linhas = dados.split("\n")
                 dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+            
+            
+                df = pd.read_csv(StringIO(dados_filtrados), sep=";")
                 
-                # Transformar em DataFrame
-                try:
-                    df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-                    
-                    # Seleciona o acumulado de chuva
-                    df = df[df['sensor'] == 'chuva']
-                    
-                    # Insere a coluna data como DateTime no DataFrame
-                    df['datahora'] = pd.to_datetime(df['datahora'])
-                    
-                    # Seta a coluna data com o índice do DataFrame
-                    df.set_index('datahora', inplace=True)
-                    
-                    # Agrupar por hora e somar os valores
-                    df = df.resample('H').mean()
-                    
-                    # Adiciona ao acumulador
-                    dfs.append(df)
+                # Seleciona o acumulado de chuva
+                df = df[df['sensor'] == 'chuva']
                 
-                except Exception as e:
-                    print(f"Erro ao processar dados para a estação {estacao}: {e}")
-            else:
-                print(f"Falha na solicitação para a estação {estacao}, código HTTP: {r.status_code}")
+                # Insere a coluna data como DateTime no DataFrame
+                df['datahora'] = pd.to_datetime(df['datahora'])
+                
+                # Seta a coluna data com o índice do DataFrame
+                df.set_index('datahora', inplace=True)
+                
+                # Agrupar por hora e somar os valores
+                df = df.resample('H')
+                
+                # Adiciona ao acumulador
+                dfs.append(df)
+            
+            except Exception as e:
+                print(f"Erro ao processar dados para a estação {estacao}: {e}")
+        else:
+            print(f"Falha na solicitação para a estação {estacao}, código HTTP: {r.status_code}")
     
     # Retorna os dados concatenados
     return pd.concat(dfs) 
