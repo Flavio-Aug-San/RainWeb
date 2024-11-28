@@ -45,9 +45,16 @@ response = requests.post(token_url, json=login_payload)
 content = response.json()
 token = content['token']
 
-hoje = datetime.now()
-data_inicial = hoje.replace(day=1)
-data_final = hoje
+# sigla do estado do Brasil
+sigla_estado = 'MG'
+
+# período dos dados
+anoi, mesi = '2024', '11'
+anof, mesf = '2024', '11'
+
+diai = '01'
+diaf = str(calendar.monthrange(int(anof), int(mesf))[1])
+data_inicial, data_final = f'{anoi}{mesi}{diai}', f'{anof}{mesf}{diaf}'
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
