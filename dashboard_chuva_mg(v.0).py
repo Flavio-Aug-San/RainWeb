@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
+from pandas.compat import StringIO
 import geopandas as gpd
 import requests
+import calendar
 import numpy as np
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
@@ -120,7 +122,6 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
 
-
 # Data de hoje
 agora = datetime.now()
 
@@ -129,7 +130,7 @@ dia_atual = agora.day
 mes_atual = agora.month
 ano_atual = agora.year
 
-# Calcula o mês e ano anteriores
+# Calcula o mês e ano anteriores para a data inicial
 if mes_atual == 1:
     mes_anterior = 12
     ano_anterior = ano_atual - 1
@@ -137,16 +138,8 @@ else:
     mes_anterior = mes_atual - 1
     ano_anterior = ano_atual
 
-# Define o último dia do mês anterior manualmente
-if mes_anterior in [1, 3, 5, 7, 8, 10, 12]:
-    ultimo_dia_mes_anterior = 31
-elif mes_anterior in [4, 6, 9, 11]:
-    ultimo_dia_mes_anterior = 30
-else:  # Fevereiro
-    if (ano_anterior % 4 == 0 and ano_anterior % 100 != 0) or (ano_anterior % 400 == 0):
-        ultimo_dia_mes_anterior = 29  # Ano bissexto
-    else:
-        ultimo_dia_mes_anterior = 28
+# Último dia do mês anterior
+ultimo_dia_mes_anterior = calendar.monthrange(ano_anterior, mes_anterior)[1]
 
 # Formata as datas
 diai = '01'
