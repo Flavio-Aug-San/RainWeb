@@ -123,7 +123,7 @@ st.set_page_config(layout="wide")
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
-    dados_estacao= df
+    #dados_estacao= df
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -167,7 +167,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= df
+    #dados_estacao= df
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
@@ -182,7 +182,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 if mostrar:
     mostrar_graficos()
 
-st.write(df)
+st.write(r)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
