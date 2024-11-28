@@ -121,8 +121,8 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 st.set_page_config(layout="wide")
 
 hoje = datetime.now()
-data_inicial = hoje.replace(day=1)
-data_final = hoje
+data_inicial = hoje
+data_final = hoje.replace(day=1)
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
@@ -164,7 +164,7 @@ tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
 if tipo_busca == 'Diária':
     data_inicial = st.sidebar.date_input("Data", value=data_inicial)
 else:
-    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2020, datetime.now().year + 1))
+    ano_selecionado = st.sidebar.selectbox("Selecione o Ano", range(2015, datetime.now().year + 1))
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
     data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
     data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
