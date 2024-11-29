@@ -104,7 +104,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
             df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
             # Filtra somente os dados de chuva
-            df = df[df['sensor'] == 'chuva']
+            #df = df[df['sensor'] == 'chuva']
 
             # Converte e organiza os dados
             df['datahora'] = pd.to_datetime(df['datahora'])
