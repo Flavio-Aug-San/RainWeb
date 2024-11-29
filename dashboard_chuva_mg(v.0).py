@@ -48,14 +48,31 @@ token = content['token']
 # sigla do estado do Brasil
 sigla_estado = 'MG'
 
-# período dos dados
-anoi, mesi = '2024', '11'
-anof, mesf = '2024', '11'
+# Data de hoje
+agora = datetime.now()
 
+# Dia, mês e ano de hoje
+dia_atual = agora.day
+mes_atual = agora.month
+ano_atual = agora.year
+
+# Calcula o mês e ano anteriores para a data inicial
+if mes_atual == 1:
+    mes_anterior = 12
+    ano_anterior = ano_atual - 1
+else:
+    mes_anterior = mes_atual - 1
+    ano_anterior = ano_atual
+
+# Último dia do mês anterior
+ultimo_dia_mes_anterior = calendar.monthrange(ano_anterior, mes_anterior)[1]
+
+# Formata as datas
 diai = '01'
-diaf = str(calendar.monthrange(int(anof), int(mesf))[1])
-data_inicial, data_final = f'{anoi}{mesi}{diai}', f'{anof}{mesf}{diaf}'
+data_inicial = f'{ano_anterior}{mes_anterior:02d}{diai}'
+data_final = f'{ano_atual}{mes_atual:02d}{dia_atual:02d}'
 data_inicial = pd.to_datetime(data_inicial)
+data_final = pd.to_datetime(data_final)
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
