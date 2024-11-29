@@ -84,7 +84,8 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     # seta a coluna data com o index do dataframe
     df.set_index('datahora', inplace=True)
 
-    df2 = df['valor'].resample('H').sum()
+    df2 = df['valor'].resample('H').sum().reset_index()
+    df2 = df.set_index("datahora")
     
     dfuma = df2[-1]
     
