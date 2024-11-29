@@ -84,7 +84,7 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     df.set_index('datahora', inplace=True)
 
     # Agrupa os dados por hora utilizando o índice
-    df_horario = df.groupby(df.index.floor('H'))['valor'].sum()
+    df_horario = df.groupby(df.index.floor('H')).sum()
 
     # Última hora
     dfuma = df_horario.iloc[-1]
