@@ -100,19 +100,18 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
             # Remover a linha de comentário e converter para DataFrame
             linhas = dados.split("\n")
             dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+            
+            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
-            if dados_filtrados.strip():  # Verifica se há dados
-                df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+            # Filtra somente os dados de chuva
+            df = df[df['sensor'] == 'chuva']
 
-                # Filtra somente os dados de chuva
-                df = df[df['sensor'] == 'chuva']
+            # Converte e organiza os dados
+            df['datahora'] = pd.to_datetime(df['datahora'])
+            df.set_index('datahora', inplace=True)
 
-                # Converte e organiza os dados
-                df['datahora'] = pd.to_datetime(df['datahora'])
-                df.set_index('datahora', inplace=True)
-
-                # Armazena os dados no acumulado
-                dados_completos.append(df)
+            # Armazena os dados no acumulado
+            dados_completos.append(df)
 
         # Combina os dados de todos os meses para a estação
         if dados_completos:
