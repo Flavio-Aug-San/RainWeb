@@ -75,7 +75,7 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     # Transformar em DataFrame
     df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
-    # seleciona o acumulado de vhuva
+    # seleciona o acumulado de chuva
     df = df[ df['sensor'] == 'chuva' ]
 
     # insere a coluna data como DateTime no DataFrame
