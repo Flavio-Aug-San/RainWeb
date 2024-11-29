@@ -87,7 +87,7 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     df_horario = df.groupby(df.index.floor('H')).sum()
 
     # Última hora
-    dfuma = df_horario.iloc[-1]
+    dfuma = df_horario['valor'].iloc[-1]
 
     # Filtra e soma os valores das últimas 24 horas
     soma_ultimas_24h = df_horario['valor'].iloc[-24:].sum()
@@ -201,7 +201,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     mostrar_graficos()
-st.dataframe(df)
+st.dataframe(df_horario)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
