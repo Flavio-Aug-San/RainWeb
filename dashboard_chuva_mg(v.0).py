@@ -29,8 +29,7 @@ senha = 'Flaviobr123!'
 mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
-#codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
-codigo_estacao = '313240401A'
+codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
 
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
@@ -60,40 +59,49 @@ data_inicial = pd.to_datetime(data_inicial)
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
-for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado, token):
+    # Lista para armazenar os dados de todas as estações
+    dados_estacoes = {}
 
-    ano_mes = ano_mes_dia.strftime('%Y%m')  # '202401'
+    for codigo in codigo_estacao:
+        # Lista para armazenar os dados de cada mês de uma estação
+        dados_completos = []
 
-    sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
-    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)  # Exemplo: data = '202404', codigo = '431490201A'
-    r = requests.get(sws_url, params=params, headers={'token': token})
-    dados = r.text
+        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+            ano_mes = ano_mes_dia.strftime('%Y%m')  # Formato '202401'
 
-    # Remover a linha de comentário
-    linhas = dados.split("\n")
-    dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+            # URL e parâmetros da requisição
+            sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
+            params = dict(
+                rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo
+            )
+            
+            # Requisição dos dados
+            r = requests.get(sws_url, params=params, headers={'token': token})
+            dados = r.text
 
-    # Transformar em DataFrame
-    df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+            # Remover a linha de comentário e converter para DataFrame
+            linhas = dados.split("\n")
+            dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
 
-    # Seleciona o acumulado de chuva
-    df = df[df['sensor'] == 'chuva']
+            if dados_filtrados.strip():  # Verifica se há dados
+                df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
-    # Insere a coluna data como DateTime no DataFrame e seta como índice
-    df['datahora'] = pd.to_datetime(df['datahora'])
-    df.set_index('datahora', inplace=True)
+                # Filtra somente os dados de chuva
+                df = df[df['sensor'] == 'chuva']
 
-    # Agrupa os dados por hora utilizando o índice
-    df_horario = df.groupby(df.index.floor('H')).sum()
+                # Converte e organiza os dados
+                df['datahora'] = pd.to_datetime(df['datahora'])
+                df.set_index('datahora', inplace=True)
 
-    # Última hora
-    dfuma = df_horario['valor'].iloc[-1]
+                # Armazena os dados no acumulado
+                dados_completos.append(df)
 
-    # Filtra e soma os valores das últimas 24 horas
-    soma_ultimas_24h = df_horario['valor'].iloc[-24:].sum()
+        # Combina os dados de todos os meses para a estação
+        if dados_completos:
+            dados_estacoes[codigo] = pd.concat(dados_completos)
 
-    # Filtra e soma os valores das últimas 48 horas
-    soma_ultimas_48h = df_horario['valor'].iloc[-48:].sum()
+    return dados_estacoes
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
@@ -201,7 +209,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     mostrar_graficos()
-st.dataframe(df_horario)
+st.dataframe(dados_estacoes)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
