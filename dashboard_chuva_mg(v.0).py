@@ -62,12 +62,13 @@ estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
 for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
 
-    ano_mes = ano_mes_dia.strftime('%Y%m') #'202401'
+    ano_mes = ano_mes_dia.strftime('%Y%m')  # '202401'
 
     sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
-    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao) #data = '202404' e #codigo = '431490201A'
+    params = dict(rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo_estacao)  # Exemplo: data = '202404', codigo = '431490201A'
     r = requests.get(sws_url, params=params, headers={'token': token})
     dados = r.text
+
     # Remover a linha de comentário
     linhas = dados.split("\n")
     dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
@@ -75,24 +76,24 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     # Transformar em DataFrame
     df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
-    # seleciona o acumulado de chuva
-    df = df[ df['sensor'] == 'chuva' ]
+    # Seleciona o acumulado de chuva
+    df = df[df['sensor'] == 'chuva']
 
-    # insere a coluna data como DateTime no DataFrame
+    # Insere a coluna data como DateTime no DataFrame e seta como índice
     df['datahora'] = pd.to_datetime(df['datahora'])
-
-    # seta a coluna data com o index do dataframe
     df.set_index('datahora', inplace=True)
 
-    df2 = df['valor'].resample('H').sum()
-    
-    dfuma = df2[-1]
-    
+    # Agrupa os dados por hora utilizando o índice
+    df_horario = df.groupby(df.index.floor('H'))['valor'].sum()
+
+    # Última hora
+    dfuma = df_horario.iloc[-1]
+
     # Filtra e soma os valores das últimas 24 horas
-    soma_ultimas_24h = df2.iloc[-24:].sum()
+    soma_ultimas_24h = df_horario.iloc[-24:].sum()
 
     # Filtra e soma os valores das últimas 48 horas
-    soma_ultimas_48h = df2.iloc[-48:].sum()
+    soma_ultimas_48h = df_horario.iloc[-48:].sum()
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
