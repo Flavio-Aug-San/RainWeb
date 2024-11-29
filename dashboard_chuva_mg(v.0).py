@@ -173,7 +173,7 @@ if modo_selecao == 'Código':
     codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
 sigla_estado = 'MG'
-tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária', 'Mensal'))
+tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
 
 if tipo_busca == 'Diária':
     data_inicial = st.sidebar.date_input("Data", value=data_inicial)
