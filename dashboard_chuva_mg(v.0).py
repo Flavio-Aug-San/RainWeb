@@ -90,10 +90,10 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
     dfuma = df_horario.iloc[-1]
 
     # Filtra e soma os valores das últimas 24 horas
-    soma_ultimas_24h = df_horario.iloc[-24:].sum()
+    soma_ultimas_24h = df_horario['valor'].iloc[-24:].sum()
 
     # Filtra e soma os valores das últimas 48 horas
-    soma_ultimas_48h = df_horario.iloc[-48:].sum()
+    soma_ultimas_48h = df_horario['valor'].iloc[-48:].sum()
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
