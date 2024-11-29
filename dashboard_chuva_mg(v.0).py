@@ -99,7 +99,7 @@ def mostrar_graficos():
     horas = ['Última Hora', '24 Horas', '48 Horas']
     chuva_valores = [dfuma, soma_ultimas_24h, soma_ultimas_48h]
 
-    fig, ax = plt.subplots(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(3, 2))
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
     ax.set_title('Precipitação nas últimas horas')
