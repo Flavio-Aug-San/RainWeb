@@ -80,7 +80,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
         # Lista para armazenar os dados de cada mês de uma estação
         dados_completos = []
 
-        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
+        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='M'):
             ano_mes = ano_mes_dia.strftime('%Y%m')  # Formato '202401'
 
             # URL e parâmetros da requisição
@@ -100,7 +100,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
             df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
             # Filtra somente os dados de chuva
-            #df = df[df['sensor'] == 'chuva']
+            df = df[df['sensor'] == 'chuva']
 
             # Converte e organiza os dados
             df['datahora'] = pd.to_datetime(df['datahora'])
@@ -163,7 +163,7 @@ st.set_page_config(layout="wide")
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
-    dados_estacao= baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    dados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -207,11 +207,11 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    dados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-        st.write(dados_estacao)
+        st.write(dados)
     else:
         st.warning("Nenhum dado encontrado para o período selecionado.")
 
