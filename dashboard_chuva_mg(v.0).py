@@ -76,7 +76,7 @@ data_final = pd.to_datetime(data_final)
 
 estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
-def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado, token):
+def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
     # Lista para armazenar os dados de todas as estações
     dados_estacoes = {}
 
@@ -168,7 +168,7 @@ st.set_page_config(layout="wide")
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
-    #dados_estacao= df
+    dados_estacao= baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -212,7 +212,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados_estacao= dados_estacoes
+    dados_estacao= baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
