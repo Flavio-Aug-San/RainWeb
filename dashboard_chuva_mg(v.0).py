@@ -29,7 +29,7 @@ senha = 'Flaviobr123!'
 mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
-codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930701A','314780801A','315250101A','313240401A','313360001A','311410501A','316230201A','313300601A']
+codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930702A','314780801A','315250101A','313240401A','313360001A','311410501A','311360201A','313300601A']
 
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
@@ -63,18 +63,14 @@ if mes_atual == 1:
 else:
     mes_anterior = mes_atual - 1
     ano_anterior = ano_atual
-
-# Último dia do mês anterior
-ultimo_dia_mes_anterior = calendar.monthrange(ano_anterior, mes_anterior)[1]
+    mes_pos = mes_atual + 1
 
 # Formata as datas
 diai = '01'
-data_inicial = f'{ano_anterior}{mes_anterior:02d}{diai}'
-data_final = f'{ano_atual}{mes_atual:02d}{dia_atual:02d}'
+data_inicial = f'{ano_atual}{mes_atual:02d}{diai}'
+data_final = f'{ano_atual}{mes_pos:02d}{dia_atual:02d}'
 data_inicial = pd.to_datetime(data_inicial)
 data_final = pd.to_datetime(data_final)
-
-estacao_selecionada =  gdf_mg['codEstacao'].unique()
 
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
     # Lista para armazenar os dados de todas as estações
