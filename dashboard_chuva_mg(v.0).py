@@ -212,7 +212,7 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    #dados_estacao= df
+    dados_estacao= dados_estacoes
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
