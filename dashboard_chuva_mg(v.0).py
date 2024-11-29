@@ -97,7 +97,7 @@ for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='1M'):
 # Função para exibir gráficos de precipitação
 def mostrar_graficos():
     horas = ['Última Hora', '24 Horas', '48 Horas']
-    chuva_valores = [chuva_ultima_hora, chuva_24h, chuva_48h]
+    chuva_valores = [dfuma, soma_ultimas_24h, soma_ultimas_48h]
 
     fig, ax = plt.subplots()
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
