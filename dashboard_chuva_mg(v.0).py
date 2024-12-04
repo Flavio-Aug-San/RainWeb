@@ -68,7 +68,7 @@ else:
 # Formata as datas
 diai = '01'
 data_inicial = f'{ano_atual}{mes_atual:02d}{diai}'
-data_final = f'{ano_atual}{mes_pos:02d}{dia_atual:02d}'
+data_final = f'{ano_atual}{mes_anterior:02d}{dia_atual:02d}'
 data_inicial = pd.to_datetime(data_inicial)
 data_final = pd.to_datetime(data_final)
 
