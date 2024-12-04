@@ -12,11 +12,6 @@ from io import StringIO
 import matplotlib.pyplot as plt
 from folium.plugins import MarkerCluster
 
-# Simulação de dados (soma de chuva em mm) - substitua por seus dados reais
-chuva_ultima_hora = np.random.uniform(0, 5)  # Exemplo de valor entre 0 e 5mm
-chuva_ultimas_24_horas = np.random.uniform(5, 50)  # Exemplo de valor entre 5 e 50mm
-chuva_ultimas_48_horas = np.random.uniform(20, 100)  # Exemplo de valor entre 20 e 100mm
-
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
 csv_file_path = 'input;/filtered_data.csv'
@@ -161,8 +156,6 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
-
-dados = 0
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
