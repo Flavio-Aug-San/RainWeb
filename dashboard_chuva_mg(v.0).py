@@ -207,11 +207,11 @@ else:
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
-    dados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    dados_baixados = dados['codEstacao']
 
     if not dados_estacao.empty:
         st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-        st.write(dados)
+        st.write(dados_baixados)
     else:
         st.warning("Nenhum dado encontrado para o período selecionado.")
 
