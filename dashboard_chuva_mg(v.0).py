@@ -19,7 +19,7 @@ chuva_ultimas_48_horas = np.random.uniform(20, 100)  # Exemplo de valor entre 20
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
-csv_file_path = 'input;/estcaos_filtradas(1).csv'
+csv_file_path = 'input;/filtered_data.csv'
 
 # Login e senha do CEMADEN (previamente fornecidos)
 login = 'augustoflaviobob@gmail.com'
