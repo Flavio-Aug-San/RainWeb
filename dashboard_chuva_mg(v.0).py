@@ -160,7 +160,6 @@ for i, row in gdf_mg.iterrows():
 for codigo in list(dados1.keys()):
     valor = dados1[codigo]
 
-    # Verifique se o valor é um DataFrame vazio
     if isinstance(valor, pd.DataFrame) and valor.empty:
         del dados1[codigo]  # Remove a chave se for um DataFrame vazio
 
@@ -168,7 +167,6 @@ for codigo in dados1.keys():
   dados2[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
   dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
   dados2[codigo] = dados2[codigo].set_index('datahora')
-
     
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
