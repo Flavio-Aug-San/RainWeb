@@ -25,7 +25,7 @@ mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
 # codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930702A','314780801A','315250101A','313240401A','313360001A','311410501A','311360201A','313300601A']
-codigo_estacao = ['315180001A','316930702A']
+codigo_estacao = ['312870901A','315180001A']
 
 
 # Carregar os dados das estações
@@ -85,7 +85,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
             params = dict(
                 rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo
             )
-            
+
             # Requisição dos dados
             r = requests.get(sws_url, params=params, headers={'token': token})
             dados = r.text
@@ -93,15 +93,8 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
             # Remover a linha de comentário e converter para DataFrame
             linhas = dados.split("\n")
             dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
-            
+
             df = pd.read_csv(StringIO(dados_filtrados), sep=";")
-
-            # Filtra somente os dados de chuva
-            df = df[df['sensor'] == 'chuva']
-
-            # Converte e organiza os dados
-            df['datahora'] = pd.to_datetime(df['datahora'])
-            df.set_index('datahora', inplace=True)
 
             # Armazena os dados no acumulado
             dados_completos.append(df)
@@ -160,8 +153,23 @@ st.set_page_config(layout="wide")
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
     # Baixar dados da estação
-    dados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
+
+# Remover chave se o valor for vazio (DataFrame vazio)
+for codigo in list(dados1.keys()):
+    valor = dados1[codigo]
+
+    # Verifique se o valor é um DataFrame vazio
+    if isinstance(valor, pd.DataFrame) and valor.empty:
+        del dados1[codigo]  # Remove a chave se for um DataFrame vazio
+
+for codigo in dados1.keys():
+  dados2[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
+  dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
+  dados2[codigo] = dados2[codigo].set_index('datahora')
+
+    
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
         location=[row['latitude'], row['longitude']],
@@ -218,7 +226,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     mostrar_graficos()
-st.dataframe(dados)
+st.dataframe(dados2)
 
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
