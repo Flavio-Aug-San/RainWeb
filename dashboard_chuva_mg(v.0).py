@@ -26,8 +26,6 @@ mg_gdf = gpd.read_file(shp_mg_url)
 # Estações Selecionadas do Sul de Minas Gerais
 codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930702A','314780801A','315250101A','313240401A','313360001A','311410501A','311360201A','313300601A']
 
-
-
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
 gdf = gpd.GeoDataFrame(df1, geometry=gpd.points_from_xy(df1['longitude'], df1['latitude']))
@@ -163,8 +161,8 @@ for codigo in list(dados1.keys()):
 dados2 = 0
 for codigo in dados1.keys():
   dados2 = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
-  dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
-  dados2[codigo] = dados2[codigo].set_index('datahora')
+  #dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
+  #dados2[codigo] = dados2[codigo].set_index('datahora')
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():    
