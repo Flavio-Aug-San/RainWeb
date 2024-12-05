@@ -224,8 +224,8 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     mostrar_graficos()
-st.write(dados2)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
+
 # Chamando a função para exibir o popup
 #exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
