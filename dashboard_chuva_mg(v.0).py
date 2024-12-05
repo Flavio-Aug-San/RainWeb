@@ -161,8 +161,8 @@ for codigo in list(dados1.keys()):
 
 for codigo in dados1.keys():
   dados1[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
-  #dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
-  #dados2[codigo] = dados2[codigo].set_index('datahora')
+  dados1[codigo]['datahora'] = pd.to_datetime(dados1[codigo]['datahora'])
+  dados1[codigo] = dados1[codigo].set_index('datahora')
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():    
