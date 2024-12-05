@@ -158,11 +158,12 @@ for codigo in list(dados1.keys()):
 
     if isinstance(valor, pd.DataFrame) and valor.empty:
         del dados1[codigo]  # Remove a chave se for um DataFrame vazio
-
+dados2 = {}
 for codigo in dados1.keys():
-  dados1[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
-  dados1[codigo]['datahora'] = pd.to_datetime(dados1[codigo]['datahora'])
-  dados1[codigo] = dados1[codigo].set_index('datahora')
+  df = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
+  df['datahora'] = pd.to_datetime(df['datahora'])
+  df = df.set_index('datahora')
+    dados2[codigo] = df
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():    
@@ -225,7 +226,7 @@ if mostrar:
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
 
-st.write(dados1)
+st.write(dados2)
 
 # Chamando a função para exibir o popup
 #exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
