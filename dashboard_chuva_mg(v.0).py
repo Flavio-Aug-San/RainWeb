@@ -150,10 +150,8 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 # Defina o layout da página como largo
 st.set_page_config(layout="wide")
 
-# Adicionar marcadores das estações meteorológicas
-for i, row in gdf_mg.iterrows():
-    # Baixar dados da estação
-    dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+# Baixar dados da estação
+dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
 
 # Remover chave se o valor for vazio (DataFrame vazio)
@@ -167,7 +165,9 @@ for codigo in dados1.keys():
   dados2[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
   dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
   dados2[codigo] = dados2[codigo].set_index('datahora')
-    
+
+# Adicionar marcadores das estações meteorológicas
+for i, row in gdf_mg.iterrows():    
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
         location=[row['latitude'], row['longitude']],
