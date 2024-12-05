@@ -160,7 +160,7 @@ for codigo in list(dados1.keys()):
 
     if isinstance(valor, pd.DataFrame) and valor.empty:
         del dados1[codigo]  # Remove a chave se for um DataFrame vazio
-
+dados2 = 0
 for codigo in dados1.keys():
   dados2[codigo] = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
   dados2[codigo]['datahora'] = pd.to_datetime(dados2[codigo]['datahora'])
