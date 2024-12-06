@@ -125,5 +125,4 @@ if st.sidebar.checkbox("Mostrar Gráfico"):
 m = leafmap.Map(center=[-21, -45], zoom_start=8)
 m.to_streamlit(width=1300, height=775)
 
-st.write(novos_dados)
 st.write(dados2)
