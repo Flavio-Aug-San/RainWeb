@@ -114,34 +114,6 @@ def mostrar_graficos():
     ax.set_title('Precipitação nas últimas horas')
 
     st.pyplot(fig)
-# Função para exibir o pop-up no canto inferior direito
-def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
-    st.markdown("""
-    <style>
-        .popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 250px;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-family: Arial, sans-serif;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Conteúdo do popup
-    st.markdown(f"""
-    <div class="popup">
-        <h4>Informações de Chuva</h4>
-        <p>Chuva na última hora: {dfuma} mm</p>
-        <p>Chuva nas últimas 24 horas: {soma_ultimas_24h} mm</p>
-        <p>Chuva nas últimas 48 horas: {soma_ultimas_48h} mm</p>
-    </div>
-    """, unsafe_allow_html=True)
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
@@ -151,13 +123,13 @@ st.set_page_config(layout="wide")
 # Baixar dados da estação
 dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
-
 # Remover chave se o valor for vazio (DataFrame vazio)
 for codigo in list(dados1.keys()):
     valor = dados1[codigo]
 
     if isinstance(valor, pd.DataFrame) and valor.empty:
         del dados1[codigo]  # Remove a chave se for um DataFrame vazio
+        
 dados2 = {}
 for codigo in dados1.keys():
   df = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
@@ -222,7 +194,6 @@ if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
     codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
-sigla_estado = 'MG'
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
 
 if tipo_busca == 'Diária':
@@ -253,7 +224,4 @@ if mostrar:
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
 
-st.write(somas_por_estacao)
-
-# Chamando a função para exibir o popup
-#exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
+st.write(dados2)
