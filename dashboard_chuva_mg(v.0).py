@@ -72,21 +72,24 @@ def calcular_somas(dados2):
         }
     return somas
 
-# Função para exibir gráficos
 def mostrar_graficos(codigo_estacao, data_selecionada):
-    if codigo_estacao not in st.session_state.somas_por_estacao:
+    if codigo_estacao not in somas_por_estacao:
         st.error(f"Estação {codigo_estacao} não encontrada.")
         return
-    soma_dia = st.session_state.somas_por_estacao[codigo_estacao]["dia_atual"]
-    soma_24h = st.session_state.somas_por_estacao[codigo_estacao]["ultimas_24h"]
-    soma_48h = st.session_state.somas_por_estacao[codigo_estacao]["ultimas_48h"]
+    
+    soma_dia_atual = somas_por_estacao[codigo_estacao]["dia_atual"]
+    soma_24h = somas_por_estacao[codigo_estacao]["ultimas_24h"]
+    soma_48h = somas_por_estacao[codigo_estacao]["ultimas_48h"]
+    
     horas = ['Dia Atual', '24 Horas', '48 Horas']
-    valores = [soma_dia, soma_24h, soma_48h]
+    chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
+
     fig, ax = plt.subplots(figsize=(5, 3))
-    ax.bar(horas, valores, color=['blue', 'orange', 'green'])
+    ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
     ax.set_title(f'Estação {codigo_estacao} - Data: {data_selecionada.strftime("%d/%m/%Y")}')
     st.pyplot(fig)
+
 
 # Carregar shapefile e CSV
 mg_gdf = gpd.read_file(shp_mg_url)
@@ -100,25 +103,40 @@ if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
     codigo_estacao = estacao_selecionada
 
-# Input para seleção de data
-data_selecionada = st.sidebar.date_input("Data de Referência", value=datetime.now())
+# Controle da data selecionada
+data_selecionada = st.sidebar.date_input("Selecione a Data", value=datetime.now().date())
 
-# Atualizar dados se a data estiver fora do intervalo
-if st.sidebar.button("Atualizar Dados") or (
-    st.session_state.range_dados["inicio"] is None
-    or data_selecionada < st.session_state.range_dados["inicio"]
-    or data_selecionada > st.session_state.range_dados["fim"]
-):
-    data_inicial = data_selecionada - timedelta(days=30)
-    data_final = data_selecionada + timedelta(days=1)
-    novos_dados = baixar_dados_estacoes([codigo_estacao], data_inicial, data_final, token, "MG")
-    st.session_state.dados2.update(novos_dados)
-    st.session_state.somas_por_estacao = calcular_somas(st.session_state.dados2)
-    st.session_state.range_dados["inicio"] = data_inicial
-    st.session_state.range_dados["fim"] = data_final
+# Verificar se a data selecionada está dentro do intervalo de dados já carregados
+data_minima = min(data_inicial, datetime.now())
+data_maxima = max(data_final, datetime.now())
 
-# Mostrar gráfico se checkbox estiver ativo
-if st.sidebar.checkbox("Mostrar Gráfico"):
+if data_selecionada < data_minima or data_selecionada > data_maxima:
+    st.warning("A data selecionada está fora do intervalo atual. Novos dados serão baixados.")
+    data_inicial = data_selecionada
+    data_final = data_selecionada + timedelta(days=1)  # Ajuste o intervalo se necessário
+    dados2 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    somas_por_estacao = {}  # Limpa o dicionário de somas para recalcular com os novos dados
+
+    for codigo_estacao, df in dados2.items():
+        df.index = pd.to_datetime(df.index)
+        inicio_dia_atual = data_selecionada
+        inicio_24h = data_selecionada - timedelta(hours=24)
+        inicio_48h = data_selecionada - timedelta(hours=48)
+
+        soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
+        soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
+        soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
+
+        somas_por_estacao[codigo_estacao] = {
+            "dia_atual": soma_dia_atual,
+            "ultimas_24h": soma_24h,
+            "ultimas_48h": soma_48h
+        }
+else:
+    st.success("A data está dentro do intervalo dos dados carregados.")
+
+# Exibir gráfico atualizado com título incluindo a data
+if mostrar:
     mostrar_graficos(codigo_estacao, data_selecionada)
 
 # Mostrar mapa
