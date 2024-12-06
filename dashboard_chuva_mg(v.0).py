@@ -104,16 +104,30 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
     return dados_estacoes
 
 # Função para exibir gráficos de precipitação
-def mostrar_graficos():
-    horas = ['Última Hora', '24 Horas', '48 Horas']
-    chuva_valores = [dfuma, soma_ultimas_24h, soma_ultimas_48h]
+def mostrar_graficos(codigo_estacao):
+    # Verificar se o código da estação existe no dicionário
+    if codigo_estacao not in somas_por_estacao:
+        st.error(f"Estação {codigo_estacao} não encontrada.")
+        return
+    
+    # Obter os valores para a estação selecionada
+    soma_dia_atual = somas_por_estacao[codigo_estacao]["dia_atual"]
+    soma_24h = somas_por_estacao[codigo_estacao]["ultimas_24h"]
+    soma_48h = somas_por_estacao[codigo_estacao]["ultimas_48h"]
+    
+    # Preparar os dados para o gráfico
+    horas = ['Dia Atual', '24 Horas', '48 Horas']
+    chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
 
-    fig, ax = plt.subplots(figsize=(3, 2))
+    # Criar o gráfico
+    fig, ax = plt.subplots(figsize=(5, 3))
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
-    ax.set_title('Precipitação nas últimas horas')
+    ax.set_title(f'Precipitação para a Estação {codigo_estacao}')
 
+    # Exibir o gráfico no Streamlit
     st.pyplot(fig)
+    
 # Função para exibir o pop-up no canto inferior direito
 def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
     st.markdown("""
