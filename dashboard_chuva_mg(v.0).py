@@ -36,6 +36,8 @@ if "dados2" not in st.session_state:
     st.session_state.dados2 = {}
 if "somas_por_estacao" not in st.session_state:
     st.session_state.somas_por_estacao = {}
+if "range_dados" not in st.session_state:
+    st.session_state.range_dados = {"inicio": None, "fim": None}
 
 # Função para baixar os dados
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, token, sigla_estado):
@@ -71,7 +73,7 @@ def calcular_somas(dados2):
     return somas
 
 # Função para exibir gráficos
-def mostrar_graficos(codigo_estacao):
+def mostrar_graficos(codigo_estacao, data_selecionada):
     if codigo_estacao not in st.session_state.somas_por_estacao:
         st.error(f"Estação {codigo_estacao} não encontrada.")
         return
@@ -83,7 +85,7 @@ def mostrar_graficos(codigo_estacao):
     fig, ax = plt.subplots(figsize=(5, 3))
     ax.bar(horas, valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
-    ax.set_title(f'Precipitação para a Estação {codigo_estacao}')
+    ax.set_title(f'Estação {codigo_estacao} - Data: {data_selecionada.strftime("%d/%m/%Y")}')
     st.pyplot(fig)
 
 # Carregar shapefile e CSV
@@ -98,16 +100,26 @@ if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
     codigo_estacao = estacao_selecionada
 
-# Atualizar dados ao clicar
-if st.sidebar.button("Atualizar Dados"):
-    # Suponha que token esteja carregado
-    dados_baixados = baixar_dados_estacoes([codigo_estacao], datetime.now() - timedelta(days=30), datetime.now(), token, "MG")
-    st.session_state.dados2 = dados_baixados
-    st.session_state.somas_por_estacao = calcular_somas(dados_baixados)
+# Input para seleção de data
+data_selecionada = st.sidebar.date_input("Data de Referência", value=datetime.now())
+
+# Atualizar dados se a data estiver fora do intervalo
+if st.sidebar.button("Atualizar Dados") or (
+    st.session_state.range_dados["inicio"] is None
+    or data_selecionada < st.session_state.range_dados["inicio"]
+    or data_selecionada > st.session_state.range_dados["fim"]
+):
+    data_inicial = data_selecionada - timedelta(days=30)
+    data_final = data_selecionada + timedelta(days=1)
+    novos_dados = baixar_dados_estacoes([codigo_estacao], data_inicial, data_final, token, "MG")
+    st.session_state.dados2.update(novos_dados)
+    st.session_state.somas_por_estacao = calcular_somas(st.session_state.dados2)
+    st.session_state.range_dados["inicio"] = data_inicial
+    st.session_state.range_dados["fim"] = data_final
 
 # Mostrar gráfico se checkbox estiver ativo
 if st.sidebar.checkbox("Mostrar Gráfico"):
-    mostrar_graficos(codigo_estacao)
+    mostrar_graficos(codigo_estacao, data_selecionada)
 
 # Mostrar mapa
 m = leafmap.Map(center=[-21, -45], zoom_start=8)
