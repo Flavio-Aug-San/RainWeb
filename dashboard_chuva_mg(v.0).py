@@ -104,11 +104,18 @@ if modo_selecao == 'Código':
     codigo_estacao = estacao_selecionada
 
 # Controle da data selecionada
-data_selecionada = st.sidebar.date_input("Selecione a Data", value=datetime.now().date())
+hoje = datetime.now().date()
+data_selecionada = st.sidebar.date_input("Selecione a Data", value=hoje)
+
+# Definir a data inicial e final com base na data selecionada
+data_inicial = pd.Timestamp(data_selecionada)
+data_final = pd.Timestamp(data_selecionada + timedelta(days=1))  # Um intervalo de 1 dia
 
 # Verificar se a data selecionada está dentro do intervalo de dados já carregados
-data_minima = min(data_inicial, datetime.now())
-data_maxima = max(data_final, datetime.now())
+if 'data_minima' not in st.session_state:
+    st.session_state.data_minima = hoje - timedelta(days=30)  # Período de 30 dias como padrão inicial
+if 'data_maxima' not in st.session_state:
+    st.session_state.data_maxima = hoje
 
 if data_selecionada < data_minima or data_selecionada > data_maxima:
     st.warning("A data selecionada está fora do intervalo atual. Novos dados serão baixados.")
