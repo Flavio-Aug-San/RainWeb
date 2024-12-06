@@ -39,7 +39,6 @@ if "token" not in st.session_state:
     else:
         st.error("Erro ao recuperar token. Verifique as credenciais e tente novamente.")
         st.stop()
-
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, token, sigla_estado):
     dados_estacoes = {}
     for codigo in codigo_estacao:
@@ -67,7 +66,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, token, sigla
         if dados_completos:
             dados_estacoes[codigo] = pd.concat(dados_completos, ignore_index=True)
     return dados_estacoes
-
+    
 # Função para calcular as somas
 def calcular_somas(dados2):
     somas = {}
@@ -154,27 +153,27 @@ if not st.session_state.dados2:
         st.warning("Nenhum dado foi baixado na inicialização.")
 
 # Função para atualizar dados com base na data selecionada
-def atualizar_dados_selecionados():
+def atualizar_dados_selecionados(codigo_estacao, data_selecionada, token):
+    # Obter o intervalo de dados armazenados
     data_min = st.session_state.range_dados["inicio"]
     data_max = st.session_state.range_dados["fim"]
+
     # Converter data_selecionada para datetime
     data_selecionada_dt = datetime.combine(data_selecionada, datetime.min.time())
+
     if (data_selecionada < data_min) or (data_selecionada > data_max):
         st.info("A data selecionada está fora do intervalo atual. Baixando novos dados...")
         # Definir novos intervalos para incluir a data selecionada
         # Aqui, baixar 30 dias antes e 1 dia depois da data selecionada
         nova_data_inicial = data_selecionada_dt - timedelta(days=30)
         nova_data_final = data_selecionada_dt + timedelta(days=1)
-        token = st.session_state.token
-        novos_dados = baixar_dados_estacoes([codigo_estacao], nova_data_inicial, nova_data_final, token, "MG")
+        novos_dados = baixar_dados_estacoes(codigo_estacao, nova_data_inicial, nova_data_final, token, "MG")
         if novos_dados:
             # Atualizar dados2 com novos dados, evitando duplicações
             for codigo, df in novos_dados.items():
                 if codigo in st.session_state.dados2:
-                    # Concatenar e remover duplicatas
-                    combined_df = pd.concat([st.session_state.dados2[codigo], df], ignore_index=True)
-                    combined_df.drop_duplicates(subset='datahora', inplace=True)
-                    st.session_state.dados2[codigo] = combined_df
+                    # Apagar os dados antigos antes de adicionar os novos
+                    st.session_state.dados2[codigo] = df
                 else:
                     st.session_state.dados2[codigo] = df
             # Recalcular somas
