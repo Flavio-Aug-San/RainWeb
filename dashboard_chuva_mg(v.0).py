@@ -105,10 +105,15 @@ if st.sidebar.button("Atualizar Dados") or (
     or data_selecionada < st.session_state.range_dados["inicio"]
     or data_selecionada > st.session_state.range_dados["fim"]
 ):
+    # Determina a data inicial e final para a requisição
     data_inicial = data_selecionada - timedelta(days=30)
     data_final = data_selecionada + timedelta(days=1)
-    novos_dados = baixar_dados_estacoes([codigo_estacao], data_inicial, data_final, token, "MG")
-    st.session_state.dados2.update(novos_dados)
+    
+    # Chama a função para baixar os dados e armazena em 'dados_iniciais'
+    dados_iniciais = baixar_dados_estacoes([codigo_estacao], data_inicial, data_final, token, "MG")
+    
+    # Atualiza os dados no session_state
+    st.session_state.dados2.update(dados_iniciais)
     st.session_state.somas_por_estacao = calcular_somas(st.session_state.dados2)
     st.session_state.range_dados["inicio"] = data_inicial
     st.session_state.range_dados["fim"] = data_final
