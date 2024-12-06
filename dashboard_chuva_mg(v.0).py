@@ -210,6 +210,9 @@ if modo_selecao == 'Código':
 
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
 
+# Adicionar um controle para "Recarregar Dados" quando a data for alterada
+tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
+
 if tipo_busca == 'Diária':
     data_inicial = st.sidebar.date_input("Data", value=data_inicial)
 else:
@@ -217,6 +220,26 @@ else:
     mes_selecionado = st.sidebar.selectbox("Selecione o Mês", range(1, 13))
     data_inicial = datetime(ano_selecionado, mes_selecionado, 1)
     data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
+
+# Adicionar um controle de flag para verificar se os dados precisam ser recarregados
+data_inicial_str = data_inicial.strftime('%Y%m%d')
+data_final_str = data_final.strftime('%Y%m%d')
+
+# Verificar se os dados já estão carregados
+if 'dados_baixados' not in st.session_state or st.session_state.data_inicial != data_inicial_str or st.session_state.data_final != data_final_str:
+    # Se os dados não estão carregados ou a data foi alterada, atualize os dados
+    st.session_state.dados_baixados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    st.session_state.data_inicial = data_inicial_str
+    st.session_state.data_final = data_final_str
+
+# Exibir os dados baixados
+dados_baixados = st.session_state.dados_baixados
+
+if dados_baixados:
+    st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+    st.write(dados_baixados)
+else:
+    st.warning("Nenhum dado encontrado para o período selecionado.")
 
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
