@@ -125,4 +125,4 @@ if st.sidebar.checkbox("Mostrar Gráfico"):
 m = leafmap.Map(center=[-21, -45], zoom_start=8)
 m.to_streamlit(width=1300, height=775)
 
-st.write(dados2)
+st.write("Dados armazenados no dicionário:", st.session_state.dados2 if st.session_state.dados2 else "Dicionário vazio")
