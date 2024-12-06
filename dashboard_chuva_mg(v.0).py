@@ -165,6 +165,33 @@ for codigo in dados1.keys():
   df = df.set_index('datahora')
   dados2[codigo] = df
 
+# Criação do dicionário para armazenar os resultados
+somas_por_estacao = {}
+
+# Data/hora atual para referência
+agora = datetime.now()
+
+# Iterar sobre os dataframes em dados2
+for codigo_estacao, df in dados2.items():
+    # Garantir que o index esteja no formato datetime
+    df.index = pd.to_datetime(df.index)
+    
+    # Filtrar os dados para o dia atual, últimas 24 horas e últimas 48 horas
+    inicio_dia_atual = agora.replace(hour=0, minute=0, second=0, microsecond=0)
+    inicio_24h = agora - timedelta(hours=24)
+    inicio_48h = agora - timedelta(hours=48)
+    
+    soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
+    soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
+    soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
+    
+    # Armazenar os resultados em somas_por_estacao
+    somas_por_estacao[codigo_estacao] = {
+        "dia_atual": soma_dia_atual,
+        "ultimas_24h": soma_24h,
+        "ultimas_48h": soma_48h
+    }
+
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():    
     # Adicionar marcador com valor
@@ -226,7 +253,7 @@ if mostrar:
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
 
-st.write(dados2)
+st.write(somas_por_estacao)
 
 # Chamando a função para exibir o popup
 #exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
