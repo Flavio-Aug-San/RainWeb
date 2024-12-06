@@ -208,8 +208,6 @@ if modo_selecao == 'Código':
     # Certifique-se de que o código da estação é extraído corretamente
     codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
-tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
-
 # Adicionar um controle para "Recarregar Dados" quando a data for alterada
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
 
