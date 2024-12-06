@@ -125,7 +125,7 @@ for codigo in list(dados_iniciais.keys()):
     if isinstance(valor, pd.DataFrame) and valor.empty:
         del dados_iniciais[codigo]  # Remove a chave se for um DataFrame vazio
 novos_dados_filtrados = {}
-for codigo in novos_dados.keys():
+for codigo in dados_iniciais.keys():
   df = dados_iniciais[codigo][dados_iniciais[codigo]['sensor'] != 'intensidade_precipitacao']
   df['datahora'] = pd.to_datetime(df['datahora'])
   df = df.set_index('datahora')
