@@ -40,7 +40,6 @@ if "token" not in st.session_state:
         st.error("Erro ao recuperar token. Verifique as credenciais e tente novamente.")
         st.stop()
 
-# Função para baixar os dados
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, token, sigla_estado):
     dados_estacoes = {}
     for codigo in codigo_estacao:
@@ -57,6 +56,9 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, token, sigla
                     try:
                         df = pd.read_csv(StringIO("\n".join(dados)), sep=";")
                         if not df.empty:
+                            # Garantir que os dados estão dentro do intervalo de datas desejado
+                            df['datahora'] = pd.to_datetime(df['datahora'])
+                            df = df[(df['datahora'] >= data_inicial) & (df['datahora'] <= data_final)]
                             dados_completos.append(df)
                     except Exception as e:
                         st.warning(f"Erro ao ler dados para a estação {codigo} no período {ano_mes}: {e}")
@@ -185,7 +187,7 @@ def atualizar_dados_selecionados():
             st.success("Dados atualizados com sucesso.")
         else:
             st.warning("Nenhum dado foi baixado para a data selecionada.")
-
+            
 # Botão para atualizar dados
 if st.sidebar.button("Atualizar Dados"):
     atualizar_dados_selecionados()
