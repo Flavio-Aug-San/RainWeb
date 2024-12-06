@@ -202,11 +202,12 @@ m.add_gdf(
 st.sidebar.header("Filtros de Seleção")
 modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 
+# Seleção da estação
 if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
+    # Certifique-se de que o código da estação é extraído corretamente
     codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
-sigla_estado = 'MG'
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
 
 if tipo_busca == 'Diária':
@@ -233,7 +234,8 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
-    mostrar_graficos()
+    # Exibir o gráfico para a estação selecionada
+    mostrar_graficos(codigo_estacao)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
 
