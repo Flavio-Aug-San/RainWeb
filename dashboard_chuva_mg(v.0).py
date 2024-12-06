@@ -15,7 +15,7 @@ st.sidebar.header("Filtros de Seleção")
 
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
-csv_file_path = 'input/filtered_data.csv'  # Corrigido o caminho do arquivo
+csv_file_path = 'input;/filtered_data.csv'  # Corrigido o caminho do arquivo
 
 # Login e senha do CEMADEN (previamente fornecidos)
 login = 'augustoflaviobob@gmail.com'
