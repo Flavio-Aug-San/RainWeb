@@ -104,7 +104,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
     return dados_estacoes
 
 # Função para exibir gráficos de precipitação
-def mostrar_graficos(codigo_estacao):
+def mostrar_graficos(estacao_selecionada):
     # Verificar se o código da estação existe no dicionário
     if codigo_estacao not in somas_por_estacao:
         st.error(f"Estação {codigo_estacao} não encontrada.")
