@@ -255,5 +255,7 @@ m.to_streamlit(width=1300,height=775)
 
 st.write(somas_por_estacao)
 
+st.write(dados2)
+
 # Chamando a função para exibir o popup
 #exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas)
