@@ -104,7 +104,7 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
     return dados_estacoes
 
 # Função para exibir gráficos de precipitação
-def mostrar_graficos(estacao_selecionada):
+def mostrar_graficos(codigo_estacao):
     # Verificar se o código da estação existe no dicionário
     if codigo_estacao not in somas_por_estacao:
         st.error(f"Estação {codigo_estacao} não encontrada.")
@@ -128,35 +128,6 @@ def mostrar_graficos(estacao_selecionada):
     # Exibir o gráfico no Streamlit
     st.pyplot(fig)
     
-# Função para exibir o pop-up no canto inferior direito
-def exibir_popup(chuva_ultima_hora, chuva_ultimas_24_horas, chuva_ultimas_48_horas):
-    st.markdown("""
-    <style>
-        .popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 250px;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-family: Arial, sans-serif;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Conteúdo do popup
-    st.markdown(f"""
-    <div class="popup">
-        <h4>Informações de Chuva</h4>
-        <p>Chuva na última hora: {dfuma} mm</p>
-        <p>Chuva nas últimas 24 horas: {soma_ultimas_24h} mm</p>
-        <p>Chuva nas últimas 48 horas: {soma_ultimas_48h} mm</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
 # Defina o layout da página como largo
@@ -164,7 +135,6 @@ st.set_page_config(layout="wide")
 
 # Baixar dados da estação
 dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
-
 
 # Remover chave se o valor for vazio (DataFrame vazio)
 for codigo in list(dados1.keys()):
