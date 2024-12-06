@@ -119,14 +119,14 @@ if st.sidebar.button("Atualizar Dados") or (
     st.session_state.range_dados["fim"] = data_final
 
 # Remover chave se o valor for vazio (DataFrame vazio)
-for codigo in list(novos_dados.keys()):
-    valor = novos_dados[codigo]
+for codigo in list(dados_iniciais.keys()):
+    valor = dados_iniciais[codigo]
 
     if isinstance(valor, pd.DataFrame) and valor.empty:
-        del novos_dados[codigo]  # Remove a chave se for um DataFrame vazio
+        del dados_iniciais[codigo]  # Remove a chave se for um DataFrame vazio
 novos_dados_filtrados = {}
 for codigo in novos_dados.keys():
-  df = novos_dados[codigo][novos_dados[codigo]['sensor'] != 'intensidade_precipitacao']
+  df = dados_iniciais[codigo][dados_iniciais[codigo]['sensor'] != 'intensidade_precipitacao']
   df['datahora'] = pd.to_datetime(df['datahora'])
   df = df.set_index('datahora')
   novos_dados_filtrados[codigo] = df
