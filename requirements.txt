@@ -1,4 +1,3 @@
-setuptools
 streamlit
 folium
 pandas
@@ -7,6 +6,5 @@ leafmap
 salem
 requests
 datetime
-folium
 numpy
 matplotlib
