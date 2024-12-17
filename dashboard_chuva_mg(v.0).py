@@ -126,6 +126,11 @@ def mostrar_graficos(codigo_estacao):
         st.error(f"Estação {codigo_estacao} não encontrada ou sem dados.")
         return
 
+    # Garantir que a coluna 'datahora' é datetime e está como índice
+    if not isinstance(dados_estacao.index, pd.DatetimeIndex):
+        dados_estacao['datahora'] = pd.to_datetime(dados_estacao['datahora'], errors='coerce')
+        dados_estacao.set_index('datahora', inplace=True)
+
     # ======================== Cálculos de precipitação ========================
     # Soma do dia atual
     soma_dia_atual = dados_estacao[dados_estacao.index.date == pd.Timestamp.now().date()]['valorMedida'].sum()
@@ -153,12 +158,17 @@ def mostrar_graficos(codigo_estacao):
     st.pyplot(fig)
 
     # ======================== Gráfico mensal ========================
-    # Agrupar os dados por mês e somar
-    dados_mensais = dados_estacao['valorMedida'].resample('M').sum()
+    # Calcular precipitação mensal usando groupby
+    dados_estacao['ano'] = dados_estacao.index.year
+    dados_estacao['mes'] = dados_estacao.index.month
+    dados_mensais = dados_estacao.groupby(['ano', 'mes'])['valorMedida'].sum().reset_index()
+
+    # Criar coluna de data para plotagem
+    dados_mensais['data'] = pd.to_datetime(dados_mensais[['ano', 'mes']].assign(day=1))
 
     # Criar o gráfico mensal
     fig_mensal, ax_mensal = plt.subplots(figsize=(8, 4))
-    ax_mensal.plot(dados_mensais.index, dados_mensais.values, marker='o', linestyle='-', color='purple')
+    ax_mensal.plot(dados_mensais['data'], dados_mensais['valorMedida'], marker='o', linestyle='-', color='purple')
     ax_mensal.set_title(f'Precipitação Mensal - Estação {codigo_estacao}')
     ax_mensal.set_ylabel('Precipitação Acumulada (mm)')
     ax_mensal.set_xlabel('Mês')
@@ -166,6 +176,7 @@ def mostrar_graficos(codigo_estacao):
 
     # Exibir o gráfico mensal no Streamlit
     st.pyplot(fig_mensal)
+
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
