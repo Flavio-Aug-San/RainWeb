@@ -258,3 +258,5 @@ if mostrar:
     mostrar_graficos(codigo_estacao)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
+st.write(somas_por_estacao)
+st.write(dados2)
