@@ -275,11 +275,11 @@ data_final_str = data_final.strftime('%Y%m%d')
 # Exibir os dados baixados
 #dados_baixados = st.session_state.dados_baixados
 
-if dados_baixados:
-    st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-    st.write(dados_baixados)
-else:
-    st.warning("Nenhum dado encontrado para o período selecionado.")
+#if dados_baixados:
+    #st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
+    #st.write(dados_baixados)
+#else:
+    #st.warning("Nenhum dado encontrado para o período selecionado.")
 
 if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
