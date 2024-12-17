@@ -72,7 +72,7 @@ agora = datetime.now()
 #data_final = pd.to_datetime(data_final)
 
 # 1. Converte a coluna 'datahora' para o formato datetime
-#dfoff['datahora'] = pd.to_datetime(dfoff['datahora'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
+dfoff['datahora'] = pd.to_datetime(dfoff['datahora'], format='%d/%m/%Y %H:%M:%S')
 
 # 2. Define a coluna 'datahora' como index
 dfoff.set_index('datahora', inplace=True)
