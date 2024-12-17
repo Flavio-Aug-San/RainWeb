@@ -38,11 +38,11 @@ gdf = gpd.GeoDataFrame(df1, geometry=gpd.points_from_xy(df1['longitude'], df1['l
 gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 
 # Recuperação do token
-token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
-login_payload = {'email': login, 'password': senha}
-response = requests.post(token_url, json=login_payload)
-content = response.json()
-token = content['token']
+#token_url = 'http://sgaa.cemaden.gov.br/SGAA/rest/controle-token/tokens'
+#login_payload = {'email': login, 'password': senha}
+#response = requests.post(token_url, json=login_payload)
+#content = response.json()
+#token = content['token']
 
 # sigla do estado do Brasil
 sigla_estado = 'MG'
@@ -83,41 +83,41 @@ dfoff.set_index('datahora', inplace=True)
 # Ordenar o índice para garantir que as datas estejam ordenadas
 dfoff.sort_index(inplace=True)
 
-def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
+#def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
     # Lista para armazenar os dados de todas as estações
-    dados_estacoes = {}
+    #dados_estacoes = {}
 
-    for codigo in codigo_estacao:
+    #for codigo in codigo_estacao:
         # Lista para armazenar os dados de cada mês de uma estação
-        dados_completos = []
+        #dados_completos = []
 
-        for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='M'):
-            ano_mes = ano_mes_dia.strftime('%Y%m')  # Formato '202401'
+        #for ano_mes_dia in pd.date_range(data_inicial, data_final, freq='M'):
+            #ano_mes = ano_mes_dia.strftime('%Y%m')  # Formato '202401'
 
             # URL e parâmetros da requisição
-            sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
-            params = dict(
-                rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo
-            )
+            #sws_url = 'http://sws.cemaden.gov.br/PED/rest/pcds/dados_pcd'
+            #params = dict(
+                #rede=11, uf=sigla_estado, inicio=ano_mes, fim=ano_mes, codigo=codigo
+            #)
 
             # Requisição dos dados
-            r = requests.get(sws_url, params=params, headers={'token': token})
-            dados = r.text
+            #r = requests.get(sws_url, params=params, headers={'token': token})
+            #dados = r.text
 
             # Remover a linha de comentário e converter para DataFrame
-            linhas = dados.split("\n")
-            dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
+            #linhas = dados.split("\n")
+            #dados_filtrados = "\n".join(linhas[1:])  # Remove a primeira linha (comentário)
 
-            df = pd.read_csv(StringIO(dados_filtrados), sep=";")
+            #df = pd.read_csv(StringIO(dados_filtrados), sep=";")
 
             # Armazena os dados no acumulado
-            dados_completos.append(df)
+            #dados_completos.append(df)
 
         # Combina os dados de todos os meses para a estação
-        if dados_completos:
-            dados_estacoes[codigo] = pd.concat(dados_completos)
+        #if dados_completos:
+            #dados_estacoes[codigo] = pd.concat(dados_completos)
 
-    return dados_estacoes
+    #return dados_estacoes
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos(codigo_estacao):
@@ -248,7 +248,7 @@ modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
     # Certifique-se de que o código da estação é extraído corretamente
-    #codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
+    codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
 # Adicionar um controle para "Recarregar Dados" quando a data for alterada
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
