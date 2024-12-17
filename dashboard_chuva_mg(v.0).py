@@ -244,9 +244,6 @@ if st.sidebar.button("Baixar Dados"):
     data_final_str = data_final.strftime('%Y%m%d')
     dados_baixados = dados['codEstacao']
 
-    if not dados_estacao.empty:
-        st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
-        st.write(dados_baixados)
     else:
         st.warning("Nenhum dado encontrado para o período selecionado.")
 
@@ -259,7 +256,3 @@ if mostrar:
     mostrar_graficos(codigo_estacao)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
-
-st.write(somas_por_estacao)
-
-st.write(dados2)
