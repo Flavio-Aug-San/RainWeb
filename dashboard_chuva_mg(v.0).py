@@ -47,8 +47,10 @@ token = content['token']
 # sigla do estado do Brasil
 sigla_estado = 'MG'
 
+data_inicial = '2024-02-01'
+data_final = '2024-02-29'
 # Data de hoje
-agora = datetime.now()
+#agora = datetime.now()
 
 # Dia, mês e ano de hoje
 #dia_atual = agora.day
