@@ -243,8 +243,9 @@ if st.sidebar.button("Baixar Dados"):
     data_inicial_str = data_inicial.strftime('%Y%m%d')
     data_final_str = data_final.strftime('%Y%m%d')
     dados_baixados = dados['codEstacao']
-else:
-    st.warning("Nenhum dado encontrado para o período selecionado.")
+
+    else:
+        st.warning("Nenhum dado encontrado para o período selecionado.")
 
 # Checkbox na barra lateral para alternar exibição do gráfico
 mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
