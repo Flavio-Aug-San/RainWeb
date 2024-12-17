@@ -263,8 +263,8 @@ else:
     data_final = datetime(ano_selecionado, mes_selecionado + 1, 1) - timedelta(days=1) if mes_selecionado != 12 else datetime(ano_selecionado, 12, 31)
 
 # Adicionar um controle de flag para verificar se os dados precisam ser recarregados
-#data_inicial_str = data_inicial.strftime('%Y%m%d')
-#data_final_str = data_final.strftime('%Y%m%d')
+data_inicial_str = data_inicial.strftime('%Y%m%d')
+data_final_str = data_final.strftime('%Y%m%d')
 
 # Verificar se os dados já estão carregados
 if 'dados_baixados' not in st.session_state or st.session_state.data_inicial != data_inicial_str or st.session_state.data_final != data_final_str:
