@@ -129,11 +129,6 @@ def mostrar_graficos(codigo_estacao):
         st.error(f"Estação {codigo_estacao} não encontrada ou sem dados.")
         return
 
-    # Garantir que a coluna 'datahora' está como datetime
-    if not isinstance(dados_estacao.index, pd.DatetimeIndex):
-        dados_estacao['datahora'] = pd.to_datetime(dados_estacao['datahora'], errors='coerce')
-        dados_estacao.set_index('datahora', inplace=True)
-
     # ======================== Cálculos de precipitação ========================
     # Soma do dia atual
     soma_dia_atual = dados_estacao[dados_estacao.index.date == pd.Timestamp.now().date()]['valorMedida'].sum()
