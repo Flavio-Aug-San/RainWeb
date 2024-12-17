@@ -47,8 +47,9 @@ token = content['token']
 # sigla do estado do Brasil
 sigla_estado = 'MG'
 
-data_inicial = '2024-02-01'
-data_final = '2024-02-29'
+# Criar as variáveis de data inicial e final
+data_inicial = pd.to_datetime("01/02/2024", format="%d/%m/%Y")
+data_final = pd.to_datetime("29/02/2024", format="%d/%m/%Y")
 # Data de hoje
 #agora = datetime.now()
 
