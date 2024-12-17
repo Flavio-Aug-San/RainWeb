@@ -266,14 +266,14 @@ data_inicial_str = data_inicial.strftime('%Y%m%d')
 data_final_str = data_final.strftime('%Y%m%d')
 
 # Verificar se os dados já estão carregados
-if 'dados_baixados' not in st.session_state or st.session_state.data_inicial != data_inicial_str or st.session_state.data_final != data_final_str:
+#if 'dados_baixados' not in st.session_state or st.session_state.data_inicial != data_inicial_str or st.session_state.data_final != data_final_str:
     # Se os dados não estão carregados ou a data foi alterada, atualize os dados
-    st.session_state.dados_baixados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
-    st.session_state.data_inicial = data_inicial_str
-    st.session_state.data_final = data_final_str
+    #st.session_state.dados_baixados = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+    #st.session_state.data_inicial = data_inicial_str
+    #st.session_state.data_final = data_final_str
 
 # Exibir os dados baixados
-dados_baixados = st.session_state.dados_baixados
+#dados_baixados = st.session_state.dados_baixados
 
 if dados_baixados:
     st.subheader(f"Dados da Estação: {estacao_selecionada} (Código: {codigo_estacao})")
