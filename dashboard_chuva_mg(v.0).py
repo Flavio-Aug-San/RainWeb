@@ -15,6 +15,7 @@ from folium.plugins import MarkerCluster
 # URLs e caminhos de arquivos
 shp_mg_url = 'https://github.com/giuliano-macedo/geodata-br-states/raw/main/geojson/br_states/br_mg.json'
 csv_file_path = 'input;/filtered_data.csv'
+dadosoff = 'estacoes_suldeminas.csv.xls'
 
 # Login e senha do CEMADEN (previamente fornecidos)
 login = 'augustoflaviobob@gmail.com'
@@ -25,6 +26,9 @@ mg_gdf = gpd.read_file(shp_mg_url)
 
 # Estações Selecionadas do Sul de Minas Gerais
 codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930702A','314780801A','315250101A','313240401A','313360001A','311410501A','311360201A','313300601A']
+
+# Lê o arquivo XLS em um DataFrame
+dfoff = pd.read_excel(dadosoff, engine='xlrd' , sep=';')
 
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
@@ -47,25 +51,31 @@ sigla_estado = 'MG'
 agora = datetime.now()
 
 # Dia, mês e ano de hoje
-dia_atual = agora.day
-mes_atual = agora.month
-ano_atual = agora.year
+#dia_atual = agora.day
+#mes_atual = agora.month
+#ano_atual = agora.year
 
 # Calcula o mês e ano anteriores para a data inicial
-if mes_atual == 1:
-    mes_anterior = 12
-    ano_anterior = ano_atual - 1
-else:
-    mes_anterior = mes_atual - 1
-    ano_anterior = ano_atual
-    mes_pos = mes_atual + 1
+#if mes_atual == 1:
+   # mes_anterior = 12
+   # ano_anterior = ano_atual - 1
+#else:
+  #  mes_anterior = mes_atual - 1
+  #  ano_anterior = ano_atual
+  #  mes_pos = mes_atual + 1
 
 # Formata as datas
-diai = '01'
-data_inicial = f'{ano_atual}{mes_anterior:02d}{diai}'
-data_final = f'{ano_atual}{mes_atual:02d}{dia_atual:02d}'
-data_inicial = pd.to_datetime(data_inicial)
-data_final = pd.to_datetime(data_final)
+#diai = '01'
+#data_inicial = f'{ano_atual}{mes_anterior:02d}{diai}'
+#data_final = f'{ano_atual}{mes_atual:02d}{dia_atual:02d}'
+#data_inicial = pd.to_datetime(data_inicial)
+#data_final = pd.to_datetime(data_final)
+
+# 1. Converte a coluna 'datahora' para o formato datetime
+dfoff['datahora'] = pd.to_datetime(dfoff['datahora'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
+
+# 2. Define a coluna 'datahora' como index
+dfoff.set_index('datahora', inplace=True)
 
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
     # Lista para armazenar os dados de todas as estações
@@ -105,28 +115,59 @@ def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos(codigo_estacao):
-    # Verificar se o código da estação existe no dicionário
-    if codigo_estacao not in somas_por_estacao:
-        st.error(f"Estação {codigo_estacao} não encontrada.")
+    # Filtrar o DataFrame dfoff para a estação selecionada
+    dados_estacao = dfoff[dfoff['codEstacao'] == codigo_estacao]
+    
+    # Verificar se há dados para a estação
+    if dados_estacao.empty:
+        st.error(f"Estação {codigo_estacao} não encontrada ou sem dados.")
         return
+
+    # Garantir que a coluna 'datahora' está como datetime
+    if not isinstance(dados_estacao.index, pd.DatetimeIndex):
+        dados_estacao['datahora'] = pd.to_datetime(dados_estacao['datahora'], errors='coerce')
+        dados_estacao.set_index('datahora', inplace=True)
+
+    # ======================== Cálculos de precipitação ========================
+    # Soma do dia atual
+    soma_dia_atual = dados_estacao[dados_estacao.index.date == pd.Timestamp.now().date()]['valorMedida'].sum()
     
-    # Obter os valores para a estação selecionada
-    soma_dia_atual = somas_por_estacao[codigo_estacao]["dia_atual"]
-    soma_24h = somas_por_estacao[codigo_estacao]["ultimas_24h"]
-    soma_48h = somas_por_estacao[codigo_estacao]["ultimas_48h"]
+    # Soma das últimas 24 horas
+    ultimas_24h = pd.Timestamp.now() - pd.Timedelta('1D')
+    soma_24h = dados_estacao[dados_estacao.index >= ultimas_24h]['valorMedida'].sum()
     
+    # Soma das últimas 48 horas
+    ultimas_48h = pd.Timestamp.now() - pd.Timedelta('2D')
+    soma_48h = dados_estacao[dados_estacao.index >= ultimas_48h]['valorMedida'].sum()
+    
+    # ======================== Gráfico de barras ========================
     # Preparar os dados para o gráfico
-    horas = ['Dia Atual', '24 Horas', '48 Horas']
+    horas = ['Dia Atual', 'Últimas 24 Horas', 'Últimas 48 Horas']
     chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
 
-    # Criar o gráfico
+    # Criar o gráfico de barras
     fig, ax = plt.subplots(figsize=(5, 3))
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
-    ax.set_title(f'Precipitação para a Estação {codigo_estacao}')
+    ax.set_title(f'Precipitação - Estação {codigo_estacao}')
 
     # Exibir o gráfico no Streamlit
     st.pyplot(fig)
+
+    # ======================== Gráfico mensal ========================
+    # Agrupar os dados por mês e somar
+    dados_mensais = dados_estacao['valorMedida'].resample('M').sum()
+
+    # Criar o gráfico mensal
+    fig_mensal, ax_mensal = plt.subplots(figsize=(8, 4))
+    ax_mensal.plot(dados_mensais.index, dados_mensais.values, marker='o', linestyle='-', color='purple')
+    ax_mensal.set_title(f'Precipitação Mensal - Estação {codigo_estacao}')
+    ax_mensal.set_ylabel('Precipitação Acumulada (mm)')
+    ax_mensal.set_xlabel('Mês')
+    ax_mensal.grid(True)
+
+    # Exibir o gráfico mensal no Streamlit
+    st.pyplot(fig_mensal)
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
@@ -150,31 +191,31 @@ for codigo in dados1.keys():
   dados2[codigo] = df
 
 # Criação do dicionário para armazenar os resultados
-somas_por_estacao = {}
+#somas_por_estacao = {}
 
 # Data/hora atual para referência
-agora = datetime.now()
+#agora = datetime.now()
 
 # Iterar sobre os dataframes em dados2
-for codigo_estacao, df in dados2.items():
-    # Garantir que o index esteja no formato datetime
-    df.index = pd.to_datetime(df.index)
+#for codigo_estacao, df in dados2.items():
+#    # Garantir que o index esteja no formato datetime
+#    df.index = pd.to_datetime(df.index)
     
     # Filtrar os dados para o dia atual, últimas 24 horas e últimas 48 horas
-    inicio_dia_atual = agora.replace(hour=0, minute=0, second=0, microsecond=0)
-    inicio_24h = agora - timedelta(hours=24)
-    inicio_48h = agora - timedelta(hours=48)
+#    inicio_dia_atual = agora.replace(hour=0, minute=0, second=0, microsecond=0)
+#    inicio_24h = agora - timedelta(hours=24)
+#    inicio_48h = agora - timedelta(hours=48)
     
-    soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
-    soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
-    soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
+#    soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
+#    soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
+#    soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
     
     # Armazenar os resultados em somas_por_estacao
-    somas_por_estacao[codigo_estacao] = {
-        "dia_atual": soma_dia_atual,
-        "ultimas_24h": soma_24h,
-        "ultimas_48h": soma_48h
-    }
+#    somas_por_estacao[codigo_estacao] = {
+#        "dia_atual": soma_dia_atual,
+#        "ultimas_24h": soma_24h,
+#        "ultimas_48h": soma_48h
+   # }
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():    
@@ -206,7 +247,7 @@ modo_selecao = st.sidebar.radio("Selecionar Estação por:", ('Código'))
 if modo_selecao == 'Código':
     estacao_selecionada = st.sidebar.selectbox("Selecione a Estação", gdf_mg['codEstacao'].unique())
     # Certifique-se de que o código da estação é extraído corretamente
-    codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
+    #codigo_estacao = gdf_mg[gdf_mg['codEstacao'] == estacao_selecionada]['codEstacao'].values[0]
 
 # Adicionar um controle para "Recarregar Dados" quando a data for alterada
 tipo_busca = st.sidebar.radio("Tipo de Busca:", ('Diária'))
@@ -255,8 +296,9 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     # Exibir o gráfico para a estação selecionada
-    mostrar_graficos(codigo_estacao)
+    mostrar_graficos(estacao_selecionada)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
-st.write(somas_por_estacao)
-st.write(dados2)
+#st.write(somas_por_estacao)
+#st.write(dados2)
+st.write(dfoff)
