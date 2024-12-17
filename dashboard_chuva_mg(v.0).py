@@ -28,7 +28,7 @@ mg_gdf = gpd.read_file(shp_mg_url)
 codigo_estacao = ['314790701A','310710901A','312870901A','315180001A','316930702A','314780801A','315250101A','313240401A','313360001A','311410501A','311360201A','313300601A']
 
 # Lê o arquivo XLS em um DataFrame
-dfoff = pd.read_csv(dadosoff, delimiter=';')
+dfoff = pd.read_csv(dadosoff, sep=';')
 
 # Carregar os dados das estações
 df1 = pd.read_csv(csv_file_path)
