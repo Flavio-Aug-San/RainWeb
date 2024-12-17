@@ -158,13 +158,12 @@ def mostrar_graficos(codigo_estacao):
     st.pyplot(fig)
 
     # ======================== Gráfico mensal ========================
-    # Calcular precipitação mensal usando groupby
-    dados_estacao['ano'] = dados_estacao.index.year
+    # Calcular precipitação mensal usando groupby, sem separar por ano
     dados_estacao['mes'] = dados_estacao.index.month
-    dados_mensais = dados_estacao.groupby(['ano', 'mes'])['valorMedida'].sum().reset_index()
+    dados_mensais = dados_estacao.groupby('mes')['valorMedida'].sum().reset_index()
 
-    # Criar coluna de data para plotagem
-    dados_mensais['data'] = pd.to_datetime(dados_mensais[['ano', 'mes']].assign(day=1))
+    # Criar coluna de data para plotagem, representando o primeiro dia do mês
+    dados_mensais['data'] = pd.to_datetime(dados_mensais['mes'].astype(str) + '-01-2024')
 
     # Criar o gráfico mensal
     fig_mensal, ax_mensal = plt.subplots(figsize=(8, 4))
