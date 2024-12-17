@@ -175,20 +175,20 @@ m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_con
 st.set_page_config(layout="wide")
 
 # Baixar dados da estação
-dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
+#dados1 = baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado)
 
 # Remover chave se o valor for vazio (DataFrame vazio)
-for codigo in list(dados1.keys()):
-    valor = dados1[codigo]
+#for codigo in list(dados1.keys()):
+    #valor = dados1[codigo]
 
-    if isinstance(valor, pd.DataFrame) and valor.empty:
-        del dados1[codigo]  # Remove a chave se for um DataFrame vazio
-dados2 = {}
-for codigo in dados1.keys():
-  df = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
-  df['datahora'] = pd.to_datetime(df['datahora'])
-  df = df.set_index('datahora')
-  dados2[codigo] = df
+    #if isinstance(valor, pd.DataFrame) and valor.empty:
+       # del dados1[codigo]  # Remove a chave se for um DataFrame vazio
+#dados2 = {}
+#for codigo in dados1.keys():
+ # df = dados1[codigo][dados1[codigo]['sensor'] != 'intensidade_precipitacao']
+ # df['datahora'] = pd.to_datetime(df['datahora'])
+ # df = df.set_index('datahora')
+ # dados2[codigo] = df
 
 # Criação do dicionário para armazenar os resultados
 #somas_por_estacao = {}
