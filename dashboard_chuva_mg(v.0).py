@@ -74,11 +74,14 @@ data_final = pd.to_datetime("29/02/2024", format="%d/%m/%Y")
 #data_inicial = pd.to_datetime(data_inicial)
 #data_final = pd.to_datetime(data_final)
 
-# 1. Converte a coluna 'datahora' para o formato datetime
-dfoff['datahora'] = pd.to_datetime(dfoff['datahora'], format='%Y/%m/%d %H:%M:%S')
+# Converter a coluna 'datahora' para datetime, ignorando milissegundos
+dfoff['datahora'] = pd.to_datetime(dfoff['datahora'], format='%Y-%m-%d %H:%M:%S.%f', errors='coerce')
 
-# 2. Define a coluna 'datahora' como index
+# Definir 'datahora' como índice
 dfoff.set_index('datahora', inplace=True)
+
+# Ordenar o índice para garantir que as datas estejam ordenadas
+dfoff.sort_index(inplace=True)
 
 def baixar_dados_estacoes(codigo_estacao, data_inicial, data_final, sigla_estado):
     # Lista para armazenar os dados de todas as estações
