@@ -118,9 +118,13 @@ dfoff.set_index('datahora', inplace=True)
 
 # Função para exibir gráficos de precipitação
 def mostrar_graficos(codigo_estacao, data_inicial):
+    # Garantir que data_inicial é um objeto datetime
+    if not isinstance(data_inicial, datetime):
+        data_inicial = pd.to_datetime(data_inicial)
+
     # Filtrar o DataFrame dfoff para a estação selecionada
     dados_estacao = dfoff[dfoff['codEstacao'] == codigo_estacao]
-    
+
     # Verificar se há dados para a estação
     if dados_estacao.empty:
         st.error(f"Estação {codigo_estacao} não encontrada ou sem dados.")
@@ -132,13 +136,13 @@ def mostrar_graficos(codigo_estacao, data_inicial):
         dados_estacao.set_index('datahora', inplace=True)
 
     # ======================== Cálculos de Precipitação ========================
-    inicio_dia_atual = data_inicial.replace(hour=0, minute=0, second=0)
+    inicio_dia_atual = data_inicial.replace(hour=0, minute=0, second=0, microsecond=0)
     inicio_24h = data_inicial - timedelta(hours=24)
     inicio_48h = data_inicial - timedelta(hours=48)
-    
-    soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
-    soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
-    soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
+
+    soma_dia_atual = dados_estacao.loc[dados_estacao.index >= inicio_dia_atual, 'valorMedida'].sum()
+    soma_24h = dados_estacao.loc[dados_estacao.index >= inicio_24h, 'valorMedida'].sum()
+    soma_48h = dados_estacao.loc[dados_estacao.index >= inicio_48h, 'valorMedida'].sum()
 
     # ======================== Gráfico de Barras ========================
     # Preparar os dados para o gráfico
