@@ -221,8 +221,53 @@ st.set_page_config(layout="wide")
 #        "ultimas_48h": soma_48h
    # }
 
+# Criar uma lista para armazenar os resultados
+resultados_precipitacao = []
+
+# Iterar por cada estação
+for estacao, grupo in dfoff.groupby('codEstacao'):
+    grupo = grupo.sort_index()  # Garantir que os dados estão ordenados por data e hora
+    
+    # Calcular somas para cada momento no DataFrame
+    for timestamp in grupo.index:
+        ultima_hora = grupo.loc[(grupo.index > timestamp - timedelta(hours=1)) & (grupo.index <= timestamp), 'valorMedida'].sum()
+        ultimas_24h = grupo.loc[(grupo.index > timestamp - timedelta(hours=24)) & (grupo.index <= timestamp), 'valorMedida'].sum()
+        ultimas_48h = grupo.loc[(grupo.index > timestamp - timedelta(hours=48)) & (grupo.index <= timestamp), 'valorMedida'].sum()
+
+        # Armazenar os resultados em uma lista
+        resultados_precipitacao.append({
+            "codEstacao": estacao,
+            "timestamp": timestamp,
+            "ultima_hora": ultima_hora,
+            "ultimas_24h": ultimas_24h,
+            "ultimas_48h": ultimas_48h
+        })
+
+# Transformar os resultados em um DataFrame
+df_resultados = pd.DataFrame(resultados_precipitacao)
+
 # Adicionar marcadores das estações meteorológicas
-for i, row in gdf_mg.iterrows():    
+for i, row in gdf_mg.iterrows():
+    # Recuperar as somas para a estação atual a partir de df_resultados
+    estacao_resultados = df_resultados[df_resultados['codEstacao'] == row['codEstacao']]
+
+    # Se houver resultados para a estação
+    if not estacao_resultados.empty:
+        # Pegar os resultados mais recentes (último timestamp disponível)
+        ultima_hora = estacao_resultados.iloc[-1]['ultima_hora']
+        ultimas_24h = estacao_resultados.iloc[-1]['ultimas_24h']
+        ultimas_48h = estacao_resultados.iloc[-1]['ultimas_48h']
+        
+        # Criar o popup com as somas
+        popup_text = f"""
+        Município: {row['municipio']} (Código: {row['codEstacao']})
+        Última Hora: {ultima_hora:.2f} mm
+        Últimas 24 Horas: {ultimas_24h:.2f} mm
+        Últimas 48 Horas: {ultimas_48h:.2f} mm
+        """
+    else:
+        popup_text = f"{row['municipio']} (Código: {row['codEstacao']}) - Sem Dados de Precipitação"
+
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
         location=[row['latitude'], row['longitude']],
@@ -234,9 +279,10 @@ for i, row in gdf_mg.iterrows():
         numberOfSides=4,
         rotation=45,
         radius=8,
-        popup=f"{row['municipio']} (Código: {row['codEstacao']})"
+        popup=popup_text  # Pop-up com as somas
     ).add_to(m)
 
+# Adicionar camada do município em Minas Gerais
 m.add_gdf(
     mg_gdf, 
     layer_name="Minas Gerais", 
