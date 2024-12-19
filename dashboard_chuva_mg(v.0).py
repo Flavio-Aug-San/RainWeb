@@ -297,7 +297,7 @@ mostrar = st.sidebar.checkbox("Gráfico de Precipitação")
 # Exibir ou ocultar o gráfico conforme o estado do checkbox
 if mostrar:
     # Exibir o gráfico para a estação selecionada
-    mostrar_graficos(estacao_selecionada)
+    mostrar_graficos(estacao_selecionada, data_inicial)
 # Mostrar o mapa em Streamlit
 m.to_streamlit(width=1300,height=775)
 #st.write(somas_por_estacao)
