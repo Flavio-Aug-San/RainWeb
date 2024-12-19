@@ -258,15 +258,16 @@ for i, row in gdf_mg.iterrows():
         ultimas_24h = estacao_resultados.iloc[-1]['ultimas_24h']
         ultimas_48h = estacao_resultados.iloc[-1]['ultimas_48h']
         
-        # Criar o popup com as somas
+        # Criar o popup com HTML para melhor formatação
         popup_text = f"""
-        Município: {row['municipio']} (Código: {row['codEstacao']})
-        Última Hora: {ultima_hora:.2f} mm
-        Últimas 24 Horas: {ultimas_24h:.2f} mm
-        Últimas 48 Horas: {ultimas_48h:.2f} mm
+        <b>Município:</b> {row['municipio']} <br>
+        <b>Código:</b> {row['codEstacao']} <br>
+        <b>Última Hora:</b> {ultima_hora:.2f} mm <br>
+        <b>Últimas 24 Horas:</b> {ultimas_24h:.2f} mm <br>
+        <b>Últimas 48 Horas:</b> {ultimas_48h:.2f} mm <br>
         """
     else:
-        popup_text = f"{row['municipio']} (Código: {row['codEstacao']}) - Sem Dados de Precipitação"
+        popup_text = f"<b>{row['municipio']} (Código: {row['codEstacao']})</b> - Sem Dados de Precipitação"
 
     # Adicionar marcador com valor
     folium.RegularPolygonMarker(
@@ -279,7 +280,7 @@ for i, row in gdf_mg.iterrows():
         numberOfSides=4,
         rotation=45,
         radius=8,
-        popup=popup_text  # Pop-up com as somas
+        popup=folium.Popup(popup_text, max_width=300)  # Usando HTML no popup
     ).add_to(m)
 
 # Adicionar camada do município em Minas Gerais
