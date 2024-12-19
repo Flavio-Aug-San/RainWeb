@@ -131,7 +131,7 @@ def mostrar_graficos(codigo_estacao):
         dados_estacao['datahora'] = pd.to_datetime(dados_estacao['datahora'], errors='coerce')
         dados_estacao.set_index('datahora', inplace=True)
 
-    # ======================== Cálculos de precipitação ========================
+    # ======================== Cálculos de Precipitação ========================
     # Soma do dia atual
     soma_dia_atual = dados_estacao[dados_estacao.index.date == pd.Timestamp.now().date()]['valorMedida'].sum()
     
@@ -143,7 +143,7 @@ def mostrar_graficos(codigo_estacao):
     ultimas_48h = pd.Timestamp.now() - pd.Timedelta('2D')
     soma_48h = dados_estacao[dados_estacao.index >= ultimas_48h]['valorMedida'].sum()
     
-    # ======================== Gráfico de barras ========================
+    # ======================== Gráfico de Barras ========================
     # Preparar os dados para o gráfico
     horas = ['Dia Atual', 'Últimas 24 Horas', 'Últimas 48 Horas']
     chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
@@ -157,25 +157,17 @@ def mostrar_graficos(codigo_estacao):
     # Exibir o gráfico no Streamlit
     st.pyplot(fig)
 
-    # ======================== Gráfico mensal ========================
-    # Calcular precipitação mensal usando groupby, sem separar por ano
-    dados_estacao['mes'] = dados_estacao.index.month
-    dados_mensais = dados_estacao.groupby('mes')['valorMedida'].sum().reset_index()
-
-    # Criar coluna de data para plotagem, representando o primeiro dia do mês
-    dados_mensais['data'] = pd.to_datetime(dados_mensais['mes'].astype(str) + '-01-2024')
-
-    # Criar o gráfico mensal
-    fig_mensal, ax_mensal = plt.subplots(figsize=(8, 4))
-    ax_mensal.plot(dados_mensais['data'], dados_mensais['valorMedida'], marker='o', linestyle='-', color='purple')
-    ax_mensal.set_title(f'Precipitação Mensal - Estação {codigo_estacao}')
-    ax_mensal.set_ylabel('Precipitação Acumulada (mm)')
-    ax_mensal.set_xlabel('Mês')
+    # ======================== Gráfico de Curva Mensal ========================
+    # Plotar a curva de precipitação ao longo do mês
+    fig_mensal, ax_mensal = plt.subplots(figsize=(10, 5))
+    ax_mensal.plot(dados_estacao.index, dados_estacao['valorMedida'], marker='o', linestyle='-', color='blue')
+    ax_mensal.set_title(f'Curva Mensal de Precipitação - Estação {codigo_estacao}')
+    ax_mensal.set_ylabel('Precipitação (mm)')
+    ax_mensal.set_xlabel('Data')
     ax_mensal.grid(True)
 
-    # Exibir o gráfico mensal no Streamlit
+    # Exibir o gráfico da curva mensal no Streamlit
     st.pyplot(fig_mensal)
-
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
