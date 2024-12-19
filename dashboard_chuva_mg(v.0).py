@@ -150,14 +150,14 @@ def mostrar_graficos(codigo_estacao, data_inicial):
     chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
 
     # Criar o gráfico de barras
-    fig, ax = plt.subplots(figsize=(4, 2))
+    fig, ax = plt.subplots(figsize=(8, 4))
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
     ax.set_title(f'Precipitação - Estação {codigo_estacao}')
 
     # ======================== Gráfico de Curva Mensal ========================
     # Plotar a curva de precipitação ao longo do mês
-    fig_mensal, ax_mensal = plt.subplots(figsize=(6, 3))
+    fig_mensal, ax_mensal = plt.subplots(figsize=(20, 10))
     ax_mensal.plot(dados_estacao.index, dados_estacao['valorMedida'], marker='o', linestyle='-', color='blue')
     ax_mensal.set_title(f'Curva Mensal de Precipitação - Estação {codigo_estacao}')
     ax_mensal.set_ylabel('Precipitação (mm)')
