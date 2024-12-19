@@ -133,6 +133,7 @@ def mostrar_graficos(codigo_estacao, data_inicial):
 
     # ======================== Cálculos de Precipitação ========================
     # Soma do dia atual
+    dia_atual = data_inicial
     soma_dia_atual = dados_estacao[dados_estacao.index.date == dia_atual]['valorMedida'].sum()
     
     # Soma das últimas 24 horas
