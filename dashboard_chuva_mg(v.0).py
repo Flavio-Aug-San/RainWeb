@@ -248,23 +248,27 @@ df_resultados = pd.DataFrame(resultados_precipitacao)
 
 # Adicionar marcadores das estações meteorológicas
 for i, row in gdf_mg.iterrows():
-    # Recuperar as somas para a estação atual a partir de df_resultados
-    estacao_resultados = df_resultados[df_resultados['codEstacao'] == row['codEstacao']]
+    # Filtrar os dados para a estação atual
+    dados_estacao = dfoff[dfoff['codEstacao'] == row['codEstacao']]
 
-    # Se houver resultados para a estação
-    if not estacao_resultados.empty:
-        # Pegar os resultados mais recentes (último timestamp disponível)
-        ultima_hora = estacao_resultados.iloc[-1]['ultima_hora']
-        ultimas_24h = estacao_resultados.iloc[-1]['ultimas_24h']
-        ultimas_48h = estacao_resultados.iloc[-1]['ultimas_48h']
-        
+    # Calcular as somas dinâmicas para a data_inicial
+    if not dados_estacao.empty:
+        inicio_ultima_hora = data_inicial - timedelta(hours=1)
+        inicio_24h = data_inicial - timedelta(hours=24)
+        inicio_48h = data_inicial - timedelta(hours=48)
+
+        # Filtrar os dados para os períodos correspondentes
+        soma_ultima_hora = dados_estacao.loc[dados_estacao.index >= inicio_ultima_hora, 'valorMedida'].sum()
+        soma_24h = dados_estacao.loc[dados_estacao.index >= inicio_24h, 'valorMedida'].sum()
+        soma_48h = dados_estacao.loc[dados_estacao.index >= inicio_48h, 'valorMedida'].sum()
+
         # Criar o popup com HTML para melhor formatação
         popup_text = f"""
         <b>Município:</b> {row['municipio']} <br>
         <b>Código:</b> {row['codEstacao']} <br>
-        <b>Última Hora:</b> {ultima_hora:.2f} mm <br>
-        <b>Últimas 24 Horas:</b> {ultimas_24h:.2f} mm <br>
-        <b>Últimas 48 Horas:</b> {ultimas_48h:.2f} mm <br>
+        <b>Última Hora:</b> {soma_ultima_hora:.2f} mm <br>
+        <b>Últimas 24 Horas:</b> {soma_24h:.2f} mm <br>
+        <b>Últimas 48 Horas:</b> {soma_48h:.2f} mm <br>
         """
     else:
         popup_text = f"<b>{row['municipio']} (Código: {row['codEstacao']})</b> - Sem Dados de Precipitação"
