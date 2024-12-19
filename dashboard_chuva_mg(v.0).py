@@ -352,4 +352,3 @@ if mostrar:
 m.to_streamlit(width=1300,height=775)
 #st.write(somas_por_estacao)
 #st.write(dados2)
-st.write(dfoff)
