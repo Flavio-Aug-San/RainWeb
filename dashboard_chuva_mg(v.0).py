@@ -132,18 +132,13 @@ def mostrar_graficos(codigo_estacao, data_inicial):
         dados_estacao.set_index('datahora', inplace=True)
 
     # ======================== Cálculos de Precipitação ========================
-    # Soma do dia atual
-    data_inicial_inicio = data_inicial.replace(hour=0, minute=0, second=0)
-    data_inicial_fim = data_inicial.replace(hour=23, minute=59, second=59)
-    soma_dia_atual = dados_estacao[(dados_estacao.index >= data_inicial_inicio) & (dados_estacao.index <= data_inicial_fim)]['valorMedida'].sum()
+    inicio_dia_atual = data_inicial.replace(hour=0, minute=0, second=0, microsecond=0)
+    inicio_24h = data_inicial - timedelta(hours=24)
+    inicio_48h = data_inicial - timedelta(hours=48)
     
-    # Soma das últimas 24 horas
-    intervalo_24h = data_inicial - pd.Timedelta(hours=24)
-    soma_24h = dados_estacao[(dados_estacao.index > intervalo_24h) & (dados_estacao.index <= data_inicial)]['valorMedida'].sum()
-    
-    # Soma das últimas 48 horas
-    intervalo_48h = data_inicial - pd.Timedelta(hours=48)
-    soma_48h = dados_estacao[(dados_estacao.index > intervalo_48h) & (dados_estacao.index <= data_inicial)]['valorMedida'].sum()
+    soma_dia_atual = df.loc[df.index >= inicio_dia_atual, 'valor'].sum()
+    soma_24h = df.loc[df.index >= inicio_24h, 'valor'].sum()
+    soma_48h = df.loc[df.index >= inicio_48h, 'valor'].sum()
 
     # ======================== Gráfico de Barras ========================
     # Preparar os dados para o gráfico
