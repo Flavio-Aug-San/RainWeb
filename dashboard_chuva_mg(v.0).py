@@ -150,25 +150,28 @@ def mostrar_graficos(codigo_estacao, data_inicial):
     chuva_valores = [soma_dia_atual, soma_24h, soma_48h]
 
     # Criar o gráfico de barras
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(4, 2))
     ax.bar(horas, chuva_valores, color=['blue', 'orange', 'green'])
     ax.set_ylabel('Precipitação (mm)')
     ax.set_title(f'Precipitação - Estação {codigo_estacao}')
 
-    # Exibir o gráfico no Streamlit
-    st.pyplot(fig)
-
     # ======================== Gráfico de Curva Mensal ========================
     # Plotar a curva de precipitação ao longo do mês
-    fig_mensal, ax_mensal = plt.subplots(figsize=(20, 6))
+    fig_mensal, ax_mensal = plt.subplots(figsize=(6, 3))
     ax_mensal.plot(dados_estacao.index, dados_estacao['valorMedida'], marker='o', linestyle='-', color='blue')
     ax_mensal.set_title(f'Curva Mensal de Precipitação - Estação {codigo_estacao}')
     ax_mensal.set_ylabel('Precipitação (mm)')
     ax_mensal.set_xlabel('Data')
     ax_mensal.grid(True)
 
-    # Exibir o gráfico da curva mensal no Streamlit
-    st.pyplot(fig_mensal)
+    # ======================== Exibir os Gráficos ========================
+    col1, col2 = st.columns(2)  # Dividir a tela em duas colunas
+
+    with col1:
+        st.pyplot(fig)  # Exibe o gráfico de barras na primeira coluna
+
+    with col2:
+        st.pyplot(fig_mensal)  # Exibe o gráfico da curva mensal na segunda coluna
     
 m = leafmap.Map(center=[-21, -45],zoom_start = 8,draw_control=False, measure_control=False, fullscreen_control=False, attribution_control=True)
 
