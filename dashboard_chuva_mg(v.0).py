@@ -48,8 +48,8 @@ gdf_mg = gpd.sjoin(gdf, mg_gdf, predicate='within')
 sigla_estado = 'MG'
 
 # Criar as variáveis de data inicial e final
-data_inicial = pd.to_datetime("01/02/2024", format="%d/%m/%Y")
-data_final = pd.to_datetime("29/02/2024", format="%d/%m/%Y")
+data_final = pd.to_datetime("01/02/2024", format="%d/%m/%Y")
+data_inicial = pd.to_datetime("29/02/2024", format="%d/%m/%Y")
 # Data de hoje
 #agora = datetime.now()
 
@@ -132,7 +132,7 @@ def mostrar_graficos(codigo_estacao, data_inicial):
         dados_estacao.set_index('datahora', inplace=True)
 
     # ======================== Cálculos de Precipitação ========================
-    inicio_dia_atual = data_inicial.replace(hour=0, minute=0, second=0, microsecond=0)
+    inicio_dia_atual = data_inicial.replace(hour=0, minute=0, second=0)
     inicio_24h = data_inicial - timedelta(hours=24)
     inicio_48h = data_inicial - timedelta(hours=48)
     
