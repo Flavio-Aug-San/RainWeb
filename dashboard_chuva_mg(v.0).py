@@ -117,7 +117,7 @@ dfoff.set_index('datahora', inplace=True)
     #return dados_estacoes
 
 # Função para exibir gráficos de precipitação
-def mostrar_graficos(codigo_estacao):
+def mostrar_graficos(codigo_estacao, data_inicial):
     # Filtrar o DataFrame dfoff para a estação selecionada
     dados_estacao = dfoff[dfoff['codEstacao'] == codigo_estacao]
     
@@ -133,16 +133,17 @@ def mostrar_graficos(codigo_estacao):
 
     # ======================== Cálculos de Precipitação ========================
     # Soma do dia atual
-    soma_dia_atual = dados_estacao[dados_estacao.index.date == pd.Timestamp.now().date()]['valorMedida'].sum()
+    dia_atual = data_inicial.date()
+    soma_dia_atual = dados_estacao[dados_estacao.index.date == dia_atual]['valorMedida'].sum()
     
     # Soma das últimas 24 horas
-    ultimas_24h = pd.Timestamp.now() - pd.Timedelta('1D')
-    soma_24h = dados_estacao[dados_estacao.index >= ultimas_24h]['valorMedida'].sum()
+    intervalo_24h = data_inicial - pd.Timedelta(hours=24)
+    soma_24h = dados_estacao[(dados_estacao.index > intervalo_24h) & (dados_estacao.index <= data_inicial)]['valorMedida'].sum()
     
     # Soma das últimas 48 horas
-    ultimas_48h = pd.Timestamp.now() - pd.Timedelta('2D')
-    soma_48h = dados_estacao[dados_estacao.index >= ultimas_48h]['valorMedida'].sum()
-    
+    intervalo_48h = data_inicial - pd.Timedelta(hours=48)
+    soma_48h = dados_estacao[(dados_estacao.index > intervalo_48h) & (dados_estacao.index <= data_inicial)]['valorMedida'].sum()
+
     # ======================== Gráfico de Barras ========================
     # Preparar os dados para o gráfico
     horas = ['Dia Atual', 'Últimas 24 Horas', 'Últimas 48 Horas']
